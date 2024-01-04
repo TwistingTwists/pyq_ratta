@@ -19,6 +19,18 @@ defmodule PyqRattaWeb.CoreComponents do
   alias Phoenix.LiveView.JS
   import PyqRattaWeb.Gettext
 
+
+
+  @doc """
+  Calls a wired up event listener to call a function with arguments.
+
+      window.addEventListener("js:exec", e => e.target[e.detail.call](...e.detail.args))
+  """
+  def js_exec(js \\ %JS{}, to, call, args) do
+    JS.dispatch(js, "js:exec", to: to, detail: %{call: call, args: args})
+  end
+
+  
   @doc """
   Renders a modal.
 
