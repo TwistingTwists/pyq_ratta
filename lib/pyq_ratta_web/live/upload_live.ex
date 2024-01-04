@@ -12,15 +12,16 @@ defmodule PyqRattaWeb.UploadLive do
     # upload_key for liveview
     # to ensure we can have a generic upload_key (instead of just @upload.video.ref, we can use @upload[upload_key][:ref])
     upload_key: :video,
-    accept_upload_types: ~w( .mp4 ),
-    max_entries: 1,
+    accept_upload_types: ~w( .jpg .jpeg ),
+    max_entries: 100,
     
     # default params for upload in liveview
-    # 5000 MB
-    max_file_size: 5000 * 1000 * 1000,
-    
     # 10 MB
-    chunk_size: 10 * 1024 * 1024,
+    max_file_size: 10 * 1000 * 1000,
+    # max_file_size: 5000 * 1000 * 1000,
+    
+    # 1 MB
+    chunk_size: 1 * 1024 * 1024,
     chunk_timeout: 90 * 2 * 1000,
     
     # live select options 
@@ -47,7 +48,7 @@ defmodule PyqRattaWeb.UploadLive do
     ~H"""
     <div class="sm:grid sm:border-t sm:border-gray-200 sm:pt-5 ">
       <%!-- render progress bar for upload --%>
-      <%= for entry <- @uploads.video.entries do %>
+      <%= for entry <- get_by(@uploads, [@upload_key, :entries]) do %>
         <div class=" text-center text-gray-600">
           <div
             role="progressbar"
@@ -69,12 +70,12 @@ defmodule PyqRattaWeb.UploadLive do
           </button>
         </div>
 
-        <%= for err <- upload_errors(@uploads.video, entry) do %>
+        <%= for err <- upload_errors(get_by(@uploads, [@upload_key]), entry) do %>
           <p class="alert alert-danger"><%= error_to_string(err) %></p>
         <% end %>
       <% end %>
       <%!-- upload drop zone --%>
-      <div class="mt-1 sm:mt-0" phx-drop-target={@uploads.video.ref}>
+      <div class="mt-1 sm:mt-0" phx-drop-target={get_by(@uploads, [@upload_key,:ref])}>
         <div class="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:bg-gray-100">
           <div class="space-y-1 text-center">
             <svg
@@ -95,14 +96,14 @@ defmodule PyqRattaWeb.UploadLive do
 
             <div class="flex text-sm text-gray-600">
               <label
-                for={@uploads.video.ref}
+                for={get_by(@uploads, [@upload_key,:ref])}
                 class="relative cursor-pointer bg-white rounded-md font-medium text-yellow-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
               >
-                <span phx-click={js_exec("##{@uploads.video.ref}", "click", [])}>
+                <span phx-click={js_exec("##{get_by(@uploads, [@upload_key,:ref])}", "click", [])}>
                   Upload files
                 </span>
                 <.live_file_input
-                  upload={@uploads.video}
+                  upload={get_by(@uploads, [@upload_key])}
                   class=" hover:bg-blue-200 sr-only "
                   tabindex="0"
                 />

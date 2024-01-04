@@ -19,7 +19,8 @@ defmodule PyqRattaWeb.CoreComponents do
   alias Phoenix.LiveView.JS
   import PyqRattaWeb.Gettext
 
-
+  def get_by(map_or_struct, key) when is_atom(key), do: get_by(map_or_struct, [key])
+  def get_by(map_or_struct, keys), do: get_in(map_or_struct, keys |> Enum.map(&Access.key/1))
 
   @doc """
   Calls a wired up event listener to call a function with arguments.
@@ -30,7 +31,7 @@ defmodule PyqRattaWeb.CoreComponents do
     JS.dispatch(js, "js:exec", to: to, detail: %{call: call, args: args})
   end
 
-  
+
   @doc """
   Renders a modal.
 
