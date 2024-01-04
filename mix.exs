@@ -39,7 +39,9 @@ defmodule PyqRatta.MixProject do
       {:ash_phoenix, "~> 1.2"},
       {:ash_postgres, "~> 1.3"},
       {:ash, "~> 2.17"},
-    #  
+      #  UI components
+      {:live_select, "~> 1.0"},
+      # phoenix core
       {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
