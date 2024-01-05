@@ -7,6 +7,8 @@
 /cover/
 
 /priv/static/uploads/
+/priv/static/**/*.gz
+uploads/
 
 # The directory Mix downloads your dependencies sources to.
 /deps/

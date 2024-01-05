@@ -93,6 +93,47 @@ defmodule PyqRattaWeb do
       # import Logger by default everywhere.
       require Logger
       import Helpers.ColorIO
+      # Add Flash notifications functionality
+      import Flashy
+
+      # Petal Components
+      defmodule PC do
+        defdelegate accordion(assigns), to: PetalComponents.Accordion
+        defdelegate alert(assigns), to: PetalComponents.Alert
+        defdelegate avatar(assigns), to: PetalComponents.Avatar
+        defdelegate badge(assigns), to: PetalComponents.Badge
+        defdelegate breadcrumbs(assigns), to: PetalComponents.Breadcrumbs
+        defdelegate button(assigns), to: PetalComponents.Button
+        defdelegate icon_button(assigns), to: PetalComponents.Button
+        defdelegate card(assigns), to: PetalComponents.Card
+        defdelegate container(assigns), to: PetalComponents.Container
+        defdelegate dropdown(assigns), to: PetalComponents.Dropdown
+        defdelegate form_label(assigns), to: PetalComponents.Form
+        defdelegate field(assigns), to: PetalComponents.Field
+        defdelegate icon(assigns), to: PetalComponents.Icon
+        defdelegate input(assigns), to: PetalComponents.Input
+        defdelegate a(assigns), to: PetalComponents.Link
+        defdelegate spinner(assigns), to: PetalComponents.Loading
+        defdelegate modal(assigns), to: PetalComponents.Modal
+        defdelegate pagination(assigns), to: PetalComponents.Pagination
+        defdelegate progress(assigns), to: PetalComponents.Progress
+        defdelegate rating(assigns), to: PetalComponents.Rating
+        defdelegate slide_over(assigns), to: PetalComponents.SlideOver
+        defdelegate table(assigns), to: PetalComponents.Table
+        defdelegate td(assigns), to: PetalComponents.Table
+        defdelegate tr(assigns), to: PetalComponents.Table
+        defdelegate th(assigns), to: PetalComponents.Table
+        defdelegate tabs(assigns), to: PetalComponents.Tabs
+        defdelegate h1(assigns), to: PetalComponents.Typography
+        defdelegate h2(assigns), to: PetalComponents.Typography
+        defdelegate h3(assigns), to: PetalComponents.Typography
+        defdelegate h4(assigns), to: PetalComponents.Typography
+        defdelegate h5(assigns), to: PetalComponents.Typography
+        defdelegate p(assigns), to: PetalComponents.Typography
+        defdelegate prose(assigns), to: PetalComponents.Typography
+        defdelegate ol(assigns), to: PetalComponents.Typography
+        defdelegate ul(assigns), to: PetalComponents.Typography
+      end
 
       # enhancement -- generic broadcast function imported in every liveview.
       # def broadcast!(data) do

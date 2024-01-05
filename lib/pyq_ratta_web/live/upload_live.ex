@@ -1,6 +1,6 @@
 defmodule PyqRattaWeb.UploadLive do
   use PyqRattaWeb, :live_view
-
+  alias PyqRattaWeb.Components.Notifications
   @defaults %{
     # choose between trigger upload vs manual upload
     # trigger_upload?: true,
@@ -33,9 +33,15 @@ defmodule PyqRattaWeb.UploadLive do
   def render(assigns) do
     ~H"""
     <div class="mt-5">
+      <div class="mt-5" :if={max_uploaded(@uploads, @upload_key)}>
       <form id="video-upload-form" phx-submit="save" phx-change="validate">
         <.upload_component {assigns} />
       </form>
+      </div>
+      <div class="bg-red-100 my-5 py-2 px-2" :if={not max_uploaded(@uploads, @upload_key)}>
+        <p> You have exceeded the number of max_file uploads. </p>
+      </div>
+
       <.update_notifications {assigns} />
     </div>
     """
@@ -124,7 +130,7 @@ defmodule PyqRattaWeb.UploadLive do
   def update_notifications(assigns) do
     ~H"""
     <div class="bg-blue-100">
-      <p class=" py-2 my-6">Current status of video processing.</p>
+      <p class="px-2 py-2 my-6">Current status of video processing.</p>
       <pre> <%= inspect @notified_updates, pretty: true %> </pre>
     </div>
     """
@@ -171,7 +177,7 @@ defmodule PyqRattaWeb.UploadLive do
     if entry.done? do
       uploaded_file =
         consume_uploaded_entry(socket, entry, fn %{path: path} ->
-          dest_folder = "priv/static/uploads"
+          dest_folder = "./uploads"
           # todo: minor : report to UI ? 
           File.mkdir_p!(dest_folder)
           dest = Path.join(dest_folder, Path.basename(entry.client_name))
@@ -179,7 +185,11 @@ defmodule PyqRattaWeb.UploadLive do
           {:ok, ~p"/uploads/#{Path.basename(dest)}"}
         end)
         |> purple("uploaded_file")
-      {:noreply, put_flash(socket, :info, "file #{entry.client_name} uploaded")}
+        
+        flashy_opts = Flashy.Normal.Options.new(dismiss_time: :timer.seconds(7))
+        notification = Notifications.Normal.new(:info, "#{entry.client_name} uploaded", flashy_opts)
+
+      {:noreply, put_notification(socket, notification)}
     else
       {:noreply, socket}
     end
@@ -202,7 +212,7 @@ defmodule PyqRattaWeb.UploadLive do
     {:noreply, assign(socket, :notified_updates, [update | assigns.notified_updates])}
   end
 
-  def handle_info(event, %{assigns: assigns} = socket) do
+  def handle_info(event, %{assigns: _assigns} = socket) do
     Logger.error("Unhandled handle_info in #{__MODULE__} with event: #{inspect(event)}")
     {:noreply, socket}
   end
@@ -211,5 +221,5 @@ defmodule PyqRattaWeb.UploadLive do
   def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
   def error_to_string(:too_many_files), do: "You have selected too many files"
 
-  defp max_uploaded(uploads), do: length(uploads.video.entries) < uploads.video.max_entries
+  defp max_uploaded(uploads, upload_key), do: length(get_by(uploads,[ upload_key, :entries])) <= get_by(uploads,[ upload_key, :max_entries])
 end

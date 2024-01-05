@@ -41,6 +41,9 @@ defmodule PyqRatta.MixProject do
       {:ash, "~> 2.17"},
       #  UI components
       {:live_select, "~> 1.0"},
+      # {:flashy, "~> 0.2.5"},
+      {:flashy, git: "https://github.com/sezaru/flashy", branch: "master" },
+      {:petal_components, "~> 1.7"},
       # phoenix core
       {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4"},

@@ -15,6 +15,9 @@ config :pyq_ratta,
 config :ash,
   use_all_identities_in_manage_relationship?: false
 
+  config :flashy,
+    disconnected_module: PyqRattaWeb.Components.Notifications.Disconnected
+
 # Configures the endpoint
 config :pyq_ratta, PyqRattaWeb.Endpoint,
   url: [host: "localhost"],
