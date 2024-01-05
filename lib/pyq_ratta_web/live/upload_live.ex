@@ -11,7 +11,7 @@ defmodule PyqRattaWeb.UploadLive do
     # upload_key for liveview
     # to ensure we can have a generic upload_key (instead of just @upload.video.ref, we can use @upload[upload_key][:ref])
     upload_key: :video,
-    accept_upload_types: ~w( .jpg .jpeg ),
+    accept_upload_types: ~w( .jpg .jpeg .png ),
     max_entries: 100,
 
     # default params for upload in liveview
@@ -115,6 +115,7 @@ defmodule PyqRattaWeb.UploadLive do
             </p>
           </div>
         </div>
+       
       </div>
     </div>
     """
@@ -168,6 +169,16 @@ defmodule PyqRattaWeb.UploadLive do
     # })
 
     if entry.done? do
+      uploaded_file =
+        consume_uploaded_entry(socket, entry, fn %{path: path} ->
+          dest_folder = "priv/static/uploads"
+          # todo: minor : report to UI ? 
+          File.mkdir_p!(dest_folder)
+          dest = Path.join(dest_folder, Path.basename(entry.client_name))
+          File.cp!(path, dest)
+          {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+        end)
+        |> purple("uploaded_file")
       {:noreply, put_flash(socket, :info, "file #{entry.client_name} uploaded")}
     else
       {:noreply, socket}
