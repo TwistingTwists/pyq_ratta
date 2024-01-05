@@ -89,11 +89,11 @@ defmodule PyqRattaWeb do
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
-      
+
       # import Logger by default everywhere.
       require Logger
       import Helpers.ColorIO
-      
+
       # enhancement -- generic broadcast function imported in every liveview.
       # def broadcast!(data) do
       #   Phoenix.PubSub.broadcast!(RazorNew.PubSub, topic(), {__MODULE__, RazorNew.Event.new(data)})
@@ -110,8 +110,7 @@ defmodule PyqRattaWeb do
         endpoint: PyqRattaWeb.Endpoint,
         router: PyqRattaWeb.Router,
         statics: PyqRattaWeb.static_paths()
-    
-      end
+    end
   end
 
   @doc """

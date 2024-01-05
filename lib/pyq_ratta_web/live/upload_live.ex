@@ -1,29 +1,28 @@
 defmodule PyqRattaWeb.UploadLive do
   use PyqRattaWeb, :live_view
 
-  
   @defaults %{
     # choose between trigger upload vs manual upload
     # trigger_upload?: true,
     notified_updates: [],
     # disabled: false,
     # time_left: nil,
-    
+
     # upload_key for liveview
     # to ensure we can have a generic upload_key (instead of just @upload.video.ref, we can use @upload[upload_key][:ref])
     upload_key: :video,
     accept_upload_types: ~w( .jpg .jpeg ),
     max_entries: 100,
-    
+
     # default params for upload in liveview
     # 10 MB
     max_file_size: 10 * 1000 * 1000,
     # max_file_size: 5000 * 1000 * 1000,
-    
+
     # 1 MB
     chunk_size: 1 * 1024 * 1024,
     chunk_timeout: 90 * 2 * 1000,
-    
+
     # live select options 
     form: %{},
     selected_cid: nil,
@@ -31,18 +30,16 @@ defmodule PyqRattaWeb.UploadLive do
   }
 
   @impl Phoenix.LiveView
-  def render( assigns) do
+  def render(assigns) do
     ~H"""
-    
     <div class="mt-5">
-        <form id="video-upload-form" phx-submit="save" phx-change="validate">
-          <.upload_component {assigns} />
-        </form>
-        <.update_notifications {assigns} />
-      </div>
+      <form id="video-upload-form" phx-submit="save" phx-change="validate">
+        <.upload_component {assigns} />
+      </form>
+      <.update_notifications {assigns} />
+    </div>
     """
   end
-
 
   def upload_component(assigns) do
     ~H"""
@@ -75,7 +72,7 @@ defmodule PyqRattaWeb.UploadLive do
         <% end %>
       <% end %>
       <%!-- upload drop zone --%>
-      <div class="mt-1 sm:mt-0" phx-drop-target={get_by(@uploads, [@upload_key,:ref])}>
+      <div class="mt-1 sm:mt-0" phx-drop-target={get_by(@uploads, [@upload_key, :ref])}>
         <div class="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:bg-gray-100">
           <div class="space-y-1 text-center">
             <svg
@@ -96,10 +93,10 @@ defmodule PyqRattaWeb.UploadLive do
 
             <div class="flex text-sm text-gray-600">
               <label
-                for={get_by(@uploads, [@upload_key,:ref])}
+                for={get_by(@uploads, [@upload_key, :ref])}
                 class="relative cursor-pointer bg-white rounded-md font-medium text-yellow-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
               >
-                <span phx-click={js_exec("##{get_by(@uploads, [@upload_key,:ref])}", "click", [])}>
+                <span phx-click={js_exec("##{get_by(@uploads, [@upload_key, :ref])}", "click", [])}>
                   Upload files
                 </span>
                 <.live_file_input
@@ -123,8 +120,6 @@ defmodule PyqRattaWeb.UploadLive do
     """
   end
 
-
-
   def update_notifications(assigns) do
     ~H"""
     <div class="bg-blue-100">
@@ -134,12 +129,9 @@ defmodule PyqRattaWeb.UploadLive do
     """
   end
 
-
   @impl Phoenix.LiveView
   def mount(params, _session, %{assigns: assigns} = socket) do
     # if connected?(socket), do: subscribe_endpoints()
-    
-    
 
     next =
       socket
@@ -151,7 +143,7 @@ defmodule PyqRattaWeb.UploadLive do
         max_entries: @defaults[:max_entries],
         max_file_size: @defaults[:max_file_size],
         chunk_size: @defaults[:chunk_size],
-        chunk_timeout: @defaults[:chunk_timeout],
+        chunk_timeout: @defaults[:chunk_timeout]
         # writer: &s3_writer/3
       )
       |> assign(:accepted_file_types, @defaults[:accept_upload_types])
@@ -161,7 +153,6 @@ defmodule PyqRattaWeb.UploadLive do
       next
     }
   end
-
 
   def handle_progress(upload_key, entry, %{assigns: %{upload_key: upload_key}} = socket) do
     # maybe report to remote server about complete upload?
@@ -188,7 +179,6 @@ defmodule PyqRattaWeb.UploadLive do
     {:noreply, cancel_upload(socket, :video, ref)}
   end
 
-
   def handle_event("validate", params, socket) do
     {:noreply, socket}
   end
@@ -211,5 +201,4 @@ defmodule PyqRattaWeb.UploadLive do
   def error_to_string(:too_many_files), do: "You have selected too many files"
 
   defp max_uploaded(uploads), do: length(uploads.video.entries) < uploads.video.max_entries
-
 end

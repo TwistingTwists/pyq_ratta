@@ -12,10 +12,8 @@ config :pyq_ratta,
   ecto_repos: [PyqRatta.Repo],
   generators: [timestamp_type: :utc_datetime]
 
-
 config :ash,
   use_all_identities_in_manage_relationship?: false
-
 
 # Configures the endpoint
 config :pyq_ratta, PyqRattaWeb.Endpoint,

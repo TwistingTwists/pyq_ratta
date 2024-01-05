@@ -31,7 +31,6 @@ defmodule PyqRattaWeb.CoreComponents do
     JS.dispatch(js, "js:exec", to: to, detail: %{call: call, args: args})
   end
 
-
   @doc """
   Renders a modal.
 
