@@ -1,0 +1,98 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Testing API
+
+## Section
+
+```elixir
+nodename = :pyq_ratta@localhost
+cookie = :ratlobhai
+Node.set_cookie(nodename, cookie)
+Node.connect(nodename)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+true
+```
+
+```elixir
+Node.ping(nodename)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:pong
+```
+
+```elixir
+:erpc.call(nodename, fn ->
+  alias PyqRatta, as: PR
+
+  PR.Quiz.Question.create(%{question_text: "This is question", correct_answer_text: "A"})
+end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+17:46:40.062 [debug] QUERY OK db=11.6ms idle=1411.4ms
+begin []
+↳ anonymous fn/3 in Ash.Changeset.with_hooks/3, at: lib/ash/changeset/changeset.ex:2140
+
+17:46:40.106 [debug] QUERY OK source="question" db=8.8ms
+INSERT INTO "question" ("correct_answer_text","created_at","question_text","tags","updated_at") VALUES ($1,$2,$3,$4,$5) RETURNING "updated_at","created_at","tags","year","long_description","short_description","explanation_image","explanation_text","correct_answer_image","correct_answer_text","type","question_image","question_text","id" ["A", ~U[2024-01-05 12:16:39.992746Z], "This is question", [], ~U[2024-01-05 12:16:39.992746Z]]
+↳ AshPostgres.DataLayer.bulk_create/3, at: lib/data_layer.ex:1404
+
+17:46:40.125 [debug] QUERY OK db=2.6ms
+commit []
+↳ anonymous fn/3 in Ash.Changeset.with_hooks/3, at: lib/ash/changeset/changeset.ex:2140
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   __lateral_join_source__: nil,
+   __meta__: %{
+     __struct__: Ecto.Schema.Metadata,
+     context: nil,
+     prefix: nil,
+     schema: PyqRatta.Quiz.Question,
+     source: "question",
+     state: :loaded
+   },
+   __metadata__: %{},
+   __order__: nil,
+   __struct__: PyqRatta.Quiz.Question,
+   aggregates: %{},
+   calculations: %{},
+   correct_answer_image: nil,
+   correct_answer_text: "A",
+   created_at: ~U[2024-01-05 12:16:39.992746Z],
+   explanation_image: nil,
+   explanation_text: nil,
+   id: 2,
+   long_description: nil,
+   question_image: nil,
+   question_text: "This is question",
+   short_description: nil,
+   tags: [],
+   type: nil,
+   updated_at: ~U[2024-01-05 12:16:39.992746Z],
+   year: nil
+ }}
+```
+
+```elixir
+:erpc.call(nodename, fn ->
+  alias PyqRatta, as: PR
+
+  PR.Quiz.Question.create(%{question_text: "This is question", correct_answer_text: "A"})
+end)
+```
