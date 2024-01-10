@@ -5,7 +5,6 @@ defmodule PyqRatta.Databank.Quiz do
   alias PyqRatta, as: PR
 
   attributes do
-    # integer_primary_key :id
     uuid_primary_key :id
 
     attribute :short_description, :string, allow_nil?: true
@@ -21,8 +20,8 @@ defmodule PyqRatta.Databank.Quiz do
   relationships do
     many_to_many :questions, PyqRatta.Databank.Question do
       through PR.Databank.QuizQuestion
-      source_attribute_on_join_resource :question_id
-      destination_attribute_on_join_resource :quiz_id
+      source_attribute_on_join_resource :quiz_id
+      destination_attribute_on_join_resource :question_id
     end
   end
 
@@ -34,21 +33,16 @@ defmodule PyqRatta.Databank.Quiz do
   code_interface do
     define_for PyqRatta.Databank
 
-    define :create_new_quiz, args: [:questions]
-    # define :add_questions, args: [:questions]
-    # define :add_question_ids, args: [:question_ids]
-    # define :for_user, action: :for_user
+    define :create_quiz_from_questions, args: [:questions]
+    define :create
     define :read, args: [:quiz_id]
-    # define :lookahead, action: :lookahead
-    # define :next, action: :next
-    # define :oldest_untried_card, action: :oldest_untried_card
   end
 
   actions do
-    defaults [:update]
+    defaults [:create, :update]
 
     read :read do
-      argument :quiz_id, :integer do
+      argument :quiz_id, :uuid do
         allow_nil? false
       end
 
@@ -58,13 +52,15 @@ defmodule PyqRatta.Databank.Quiz do
       filter expr(id == ^arg(:quiz_id))
     end
 
-    create :create_new_quiz do
+    create :create_quiz_from_questions do
+      accept []
+
       argument :questions, {:array, :map} do
         allow_nil? false
       end
 
-      change manage_relationship(:questions, type: :append_and_remove)
-      # change manage_relationship(:questions, type: :direct_control)
+      # change {PyqRatta.Databank.Changes.AddArgToRelationship, arg: :quiz_id, rel: :questions}
+      change manage_relationship(:questions, type: :direct_control)
     end
 
     # update :add_questions do

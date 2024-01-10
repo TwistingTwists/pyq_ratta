@@ -5,17 +5,7 @@ defmodule PyqRatta.QuizTest do
   alias PyqRatta.Databank.Question
 
   describe "Creating Questions: " do
-    test "create_question/1" do
-      %{type: type, question_text: question_text} =
-        question_params =
-        Factory.questions_list_params()
-        |> hd()
-
-      assert {:ok, %{type: ^type, question_text: ^question_text}} =
-               Question.create(question_params)
-    end
-
-    test "read/1" do
+    test "read/1 and create/1" do
       %{type: type, question_text: question_text} =
         question_params =
         Factory.questions_list_params()
@@ -28,14 +18,13 @@ defmodule PyqRatta.QuizTest do
     end
   end
 
-  # describe "Creating Quiz: " do
-  #   test "create_quiz/1 with list of questions" do
-  #     questions =
-  #       Factory.questions_list_params()
-  #       |> IO.inspect(label: "quetions are ")
+  describe "Creating Quiz: " do
+    test "create_quiz/1 with list of questions" do
+      questions = Factory.questions_list_params()
 
-  #     assert {:ok, %{id: quiz_id, questions: questions}} =
-  #              Quiz.create_new_quiz(questions: questions)
-  #   end
-  # end
+      assert {:ok, %{id: quiz_id}} =
+               Quiz.create_quiz_from_questions(questions)
+               |> IO.inspect(label: "questions are ")
+    end
+  end
 end

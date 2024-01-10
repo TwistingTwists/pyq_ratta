@@ -3,7 +3,6 @@ defmodule PyqRatta.Databank.Question do
     data_layer: AshPostgres.DataLayer
 
   attributes do
-    # integer_primary_key :id
     uuid_primary_key :id
 
     attribute :question_text, :string, allow_nil?: true
@@ -29,8 +28,8 @@ defmodule PyqRatta.Databank.Question do
   relationships do
     many_to_many :quizzes, PyqRatta.Databank.Quiz do
       through PyqRatta.Databank.QuizQuestion
-      source_attribute_on_join_resource :quiz_id
-      destination_attribute_on_join_resource :question_id
+      source_attribute_on_join_resource :question_id
+      destination_attribute_on_join_resource :quiz_id
     end
   end
 
