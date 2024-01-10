@@ -24,7 +24,6 @@ defmodule PyqRatta.QuizTest do
 
       assert {:ok, %{id: quiz_id}} =
                Quiz.create_quiz_from_questions(questions)
-               |> IO.inspect(label: "questions are ")
     end
   end
 end
