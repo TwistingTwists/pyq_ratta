@@ -1,9 +1,10 @@
-defmodule PyqRatta.Quiz.Question do
+defmodule PyqRatta.Databank.Question do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer
 
   attributes do
-    integer_primary_key :id
+    # integer_primary_key :id
+    uuid_primary_key :id
 
     attribute :question_text, :string, allow_nil?: true
     attribute :question_image, :string, allow_nil?: true
@@ -25,15 +26,29 @@ defmodule PyqRatta.Quiz.Question do
     create_timestamp :updated_at
   end
 
+  relationships do
+    many_to_many :quizzes, PyqRatta.Databank.Quiz do
+      through PyqRatta.Databank.QuizQuestion
+      source_attribute_on_join_resource :quiz_id
+      destination_attribute_on_join_resource :question_id
+    end
+  end
+
   postgres do
     table "question"
     repo PyqRatta.Repo
+
+    # references do
+    #   reference :quiz, on_delete: :delete, on_update: :update
+    # end
   end
 
   code_interface do
-    define_for PyqRatta.Quiz
+    define_for PyqRatta.Databank
 
     define :create, action: :create
+    define :read, args: [:question_id]
+    define :all
     # define :for_user, action: :for_user
     # define :get_by, action: :get_by
     # define :lookahead, action: :lookahead
@@ -42,6 +57,30 @@ defmodule PyqRatta.Quiz.Question do
   end
 
   actions do
-    defaults [:read, :update, :create]
+    defaults [:update, :create, :destroy]
+
+    read :all
+
+    read :read do
+      argument :question_id, :uuid do
+        allow_nil? false
+      end
+
+      # to indicate that only one record will be returned
+      get? true
+      primary? true
+
+      filter expr(id == ^arg(:question_id))
+    end
+
+    # update :update do
+    #   primary? true
+
+    #   argument :quiz_id, :integer do
+    #      allow_nil? false
+    #   end
+
+    #   change manage_relationship(:quiz, type: :direct_control)
+    # end
   end
 end

@@ -146,13 +146,14 @@ defmodule PyqRattaWeb.CoreComponents do
     """
   end
 
-  @doc """
-  Shows the flash group with standard titles and content.
+  # @doc """
+  # Shows the flash group with standard titles and content.
 
-  ## Examples
+  # ## Examples
 
-      <.flash_group flash={@flash} />
-  """
+  #     <.flash_group flash={@flash} />
+  # """
+
   # attr :flash, :map, required: true, doc: "the map of flash messages"
   # attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
 

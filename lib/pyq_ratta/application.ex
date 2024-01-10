@@ -1,6 +1,4 @@
 defmodule PyqRatta.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
@@ -12,16 +10,18 @@ defmodule PyqRatta.Application do
       PyqRatta.Repo,
       {DNSCluster, query: Application.get_env(:pyq_ratta, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: PyqRatta.PubSub},
+      {Registry, keys: :unique, name: PyqRatta.Workers.QuizServerRegistry},
+      {Registry, keys: :unique, name: PyqRatta.Workers.UserAttemptServerRegistry},
+      {DynamicSupervisor, strategy: :one_for_one, name: PyqRatta.User.DynamicSupervisor},
+      {PartitionSupervisor, child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisors},
+      # PyqRatta.Workers.QuizServer,
+      # PyqRatta.Workers.UserAttemptServer,
       # Start the Finch HTTP client for sending emails
       {Finch, name: PyqRatta.Finch},
-      # Start a worker by calling: PyqRatta.Worker.start_link(arg)
-      # {PyqRatta.Worker, arg},
       # Start to serve requests, typically the last entry
       PyqRattaWeb.Endpoint
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: PyqRatta.Supervisor]
     Supervisor.start_link(children, opts)
   end

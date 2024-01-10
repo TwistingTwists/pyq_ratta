@@ -19,10 +19,13 @@ defmodule PyqRatta.DataCase do
   using do
     quote do
       alias PyqRatta.Repo
+      alias PyqRatta.Factory
 
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
+      # import Ecto
+      # import Ecto.Changeset
+      # import Ecto.Query
+      # import Ash.Query
+      # import Ash.Changeset
       import PyqRatta.DataCase
     end
   end

@@ -96,6 +96,10 @@ defmodule PyqRattaWeb do
       # Add Flash notifications functionality
       import Flashy
 
+      # # does not work.
+      # # https://elixirforum.com/t/is-there-a-way-to-suppress-warnings-about-unused-variables/8637/11
+      # @compile :nowarn_unused_vars
+
       # Petal Components
       defmodule PC do
         defdelegate accordion(assigns), to: PetalComponents.Accordion

@@ -2,13 +2,13 @@
   "attributes": [
     {
       "allow_nil?": false,
-      "default": "nil",
-      "generated?": true,
+      "default": "fragment(\"uuid_generate_v4()\")",
+      "generated?": false,
       "primary_key?": true,
       "references": null,
       "size": null,
       "source": "id",
-      "type": "bigint"
+      "type": "uuid"
     },
     {
       "allow_nil?": true,
@@ -148,8 +148,8 @@
   "check_constraints": [],
   "custom_indexes": [],
   "custom_statements": [],
-  "has_create_action": false,
-  "hash": "45B966CE8BF301C7F128F05DE57B7ADBC6EDB85DE45B4FAFED792F0A73C75A4A",
+  "has_create_action": true,
+  "hash": "7C56362B4569CE238B0B67FB539A6D0BAD1A33CBD5AA5658AC78094785864584",
   "identities": [],
   "multitenancy": {
     "attribute": null,

@@ -1,6 +1,7 @@
 defmodule PyqRattaWeb.UploadLive do
   use PyqRattaWeb, :live_view
   alias PyqRattaWeb.Components.Notifications
+
   @defaults %{
     # choose between trigger upload vs manual upload
     # trigger_upload?: true,
@@ -33,13 +34,13 @@ defmodule PyqRattaWeb.UploadLive do
   def render(assigns) do
     ~H"""
     <div class="mt-5">
-      <div class="mt-5" :if={max_uploaded(@uploads, @upload_key)}>
-      <form id="video-upload-form" phx-submit="save" phx-change="validate">
-        <.upload_component {assigns} />
-      </form>
+      <div :if={max_uploaded(@uploads, @upload_key)} class="mt-5">
+        <form id="video-upload-form" phx-submit="save" phx-change="validate">
+          <.upload_component {assigns} />
+        </form>
       </div>
-      <div class="bg-red-100 my-5 py-2 px-2" :if={not max_uploaded(@uploads, @upload_key)}>
-        <p> You have exceeded the number of max_file uploads. </p>
+      <div :if={not max_uploaded(@uploads, @upload_key)} class="bg-red-100 my-5 py-2 px-2">
+        <p>You have exceeded the number of max_file uploads.</p>
       </div>
 
       <.update_notifications {assigns} />
@@ -121,7 +122,6 @@ defmodule PyqRattaWeb.UploadLive do
             </p>
           </div>
         </div>
-       
       </div>
     </div>
     """
@@ -185,9 +185,9 @@ defmodule PyqRattaWeb.UploadLive do
           {:ok, ~p"/uploads/#{Path.basename(dest)}"}
         end)
         |> purple("uploaded_file")
-        
-        flashy_opts = Flashy.Normal.Options.new(dismiss_time: :timer.seconds(7))
-        notification = Notifications.Normal.new(:info, "#{entry.client_name} uploaded", flashy_opts)
+
+      flashy_opts = Flashy.Normal.Options.new(dismiss_time: :timer.seconds(7))
+      notification = Notifications.Normal.new(:info, "#{entry.client_name} uploaded", flashy_opts)
 
       {:noreply, put_notification(socket, notification)}
     else
@@ -221,5 +221,8 @@ defmodule PyqRattaWeb.UploadLive do
   def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
   def error_to_string(:too_many_files), do: "You have selected too many files"
 
-  defp max_uploaded(uploads, upload_key), do: length(get_by(uploads,[ upload_key, :entries])) <= get_by(uploads,[ upload_key, :max_entries])
+  defp max_uploaded(uploads, upload_key),
+    do:
+      length(get_by(uploads, [upload_key, :entries])) <=
+        get_by(uploads, [upload_key, :max_entries])
 end

@@ -4,7 +4,7 @@ defmodule PyqRatta.MixProject do
   def project do
     [
       app: :pyq_ratta,
-      version: "0.1.0",
+      version: "0.1.2",
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -27,12 +27,9 @@ defmodule PyqRatta.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  # Specifies your project dependencies.
-  #
-  # Type `mix help deps` for examples and options.
   defp deps do
     [
-      # all ash 
+      # all ash
       {:ash_admin, "~> 0.10"},
       {:ash_authentication_phoenix, "~> 1.8"},
       {:ash_authentication, "~> 3.11"},
@@ -42,7 +39,7 @@ defmodule PyqRatta.MixProject do
       #  UI components
       {:live_select, "~> 1.0"},
       # {:flashy, "~> 0.2.5"},
-      {:flashy, git: "https://github.com/sezaru/flashy", branch: "master" },
+      {:flashy, git: "https://github.com/sezaru/flashy", branch: "master"},
       {:petal_components, "~> 1.7"},
       # phoenix core
       {:phoenix, "~> 1.7.10"},
@@ -63,16 +60,22 @@ defmodule PyqRatta.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      # telegram
+      {:ex_gram, "~> 0.50.0"},
+      {:tesla, "~> 1.2"},
+      {:hackney, "~> 1.12"},
+      # dev tools
+      # {:ecto_erd, "~> 0.5", only: :dev}
+
+      # Testing
+      # {:ex_machina, "~> 2.7"},
+      {:faker, "~> 0.17"},
+      {:mock, "~> 0.3.8", only: :test}
+      # {:stream_data, "~> 0.6", only: :test}
     ]
   end
 
-  # Aliases are shortcuts or tasks specific to the current project.
-  # For example, to install project dependencies and perform other setup tasks, run:
-  #
-  #     $ mix setup
-  #
-  # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],

@@ -8,15 +8,16 @@
 import Config
 
 config :pyq_ratta,
-  ash_apis: [PyqRatta.Quiz],
+  ash_apis: [PyqRatta.Databank],
+  # PyqRatta.QuizPractice],
   ecto_repos: [PyqRatta.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 config :ash,
   use_all_identities_in_manage_relationship?: false
 
-  config :flashy,
-    disconnected_module: PyqRattaWeb.Components.Notifications.Disconnected
+config :flashy,
+  disconnected_module: PyqRattaWeb.Components.Notifications.Disconnected
 
 # Configures the endpoint
 config :pyq_ratta, PyqRattaWeb.Endpoint,
