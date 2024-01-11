@@ -36,10 +36,6 @@ defmodule PyqRatta.Databank.Question do
   postgres do
     table "question"
     repo PyqRatta.Repo
-
-    # references do
-    #   reference :quiz, on_delete: :delete, on_update: :update
-    # end
   end
 
   code_interface do
@@ -49,11 +45,6 @@ defmodule PyqRatta.Databank.Question do
     define :read, args: [:question_id]
     define :all
     define :update
-    # define :for_user, action: :for_user
-    # define :get_by, action: :get_by
-    # define :lookahead, action: :lookahead
-    # define :next, action: :next
-    # define :oldest_untried_card, action: :oldest_untried_card
   end
 
   actions do
@@ -72,15 +63,5 @@ defmodule PyqRatta.Databank.Question do
 
       filter expr(id == ^arg(:question_id))
     end
-
-    # update :update do
-    #   primary? true
-
-    #   argument :quiz_id, :integer do
-    #      allow_nil? false
-    #   end
-
-    #   change manage_relationship(:quiz, type: :direct_control)
-    # end
   end
 end
