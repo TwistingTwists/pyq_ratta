@@ -46,11 +46,11 @@ defmodule PyqRatta.Databank.Quiz do
   end
 
   actions do
-    defaults [:create, :update]
+    defaults [:read, :create, :update]
 
-    read :all, primary?: true
+    read :all
 
-    read :read do
+    read :read_by_id do
       argument :quiz_id, :uuid do
         allow_nil? false
       end

@@ -42,24 +42,24 @@ defmodule PyqRatta.Databank.Question do
     define_for PyqRatta.Databank
 
     define :create, action: :create
-    define :read, args: [:question_id]
+    define :read
+    define :read_by_id, args: [:question_id]
     define :all
     define :update
   end
 
   actions do
-    defaults [:update, :create, :destroy]
+    defaults [:read, :update, :create, :destroy]
 
     read :all
 
-    read :read do
+    read :read_by_id do
       argument :question_id, :uuid do
         allow_nil? false
       end
 
       # to indicate that only one record will be returned
       get? true
-      primary? true
 
       filter expr(id == ^arg(:question_id))
     end

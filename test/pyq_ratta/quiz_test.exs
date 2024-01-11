@@ -15,7 +15,8 @@ defmodule PyqRatta.QuizTest do
       assert {:ok, %{type: ^type, question_text: ^question_text, id: id}} =
                Question.create(question_params)
 
-      assert {:ok, %{type: ^type, question_text: ^question_text, id: ^id}} = Question.read(id)
+      assert {:ok, %{type: ^type, question_text: ^question_text, id: ^id}} =
+               Question.read_by_id(id)
     end
   end
 
