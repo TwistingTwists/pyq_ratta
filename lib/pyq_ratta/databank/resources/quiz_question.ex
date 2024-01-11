@@ -7,6 +7,17 @@ defmodule PyqRatta.Databank.QuizQuestion do
   alias PyqRatta.Databank.Quiz
   alias PyqRatta.Databank.Question
 
+  code_interface do
+    define_for PyqRatta.Databank
+    define :relate, args: [:quiz_id, :question_id]
+  end
+
+  actions do
+    create :relate do
+      upsert? true
+    end
+  end
+
   postgres do
     table "quiz_questions"
     repo PyqRatta.Repo

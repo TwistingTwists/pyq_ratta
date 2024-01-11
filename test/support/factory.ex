@@ -1,4 +1,6 @@
 defmodule PyqRatta.Factory do
+  alias __MODULE__
+
   def questions_list_params do
     [
       %{
@@ -21,5 +23,19 @@ defmodule PyqRatta.Factory do
       year: 2020,
       tags: ["pyq", "environment"]
     }
+  end
+
+  defmacro insert_many_questions do
+    quote do
+      alias PyqRatta.Databank.Quiz
+      alias PyqRatta.Databank.Question
+      questions_params_list = Factory.questions_list_params()
+
+      questions_in_db =
+        Enum.reduce(questions_params_list, [], fn question_params, acc ->
+          {:ok, question} = Question.create(question_params)
+          acc ++ [question]
+        end)
+    end
   end
 end

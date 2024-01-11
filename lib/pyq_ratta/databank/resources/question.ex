@@ -48,6 +48,7 @@ defmodule PyqRatta.Databank.Question do
     define :create, action: :create
     define :read, args: [:question_id]
     define :all
+    define :update
     # define :for_user, action: :for_user
     # define :get_by, action: :get_by
     # define :lookahead, action: :lookahead

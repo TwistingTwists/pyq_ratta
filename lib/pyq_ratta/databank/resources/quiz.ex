@@ -4,6 +4,10 @@ defmodule PyqRatta.Databank.Quiz do
 
   alias PyqRatta, as: PR
 
+  alias __MODULE__
+  alias PyqRatta.Databank.Question
+  alias PyqRatta.Databank.QuizQuestion
+
   attributes do
     uuid_primary_key :id
 
@@ -35,16 +39,26 @@ defmodule PyqRatta.Databank.Quiz do
 
     define :create_quiz_from_questions, args: [:questions]
     define :create
+    define :all
+    define :update_quiz_with_question_ids, args: [:question_ids]
+    # define :update_quiz_with_question_id, args: [:question_id]
     define :read, args: [:quiz_id]
   end
 
   actions do
     defaults [:create, :update]
 
+    read :all, primary?: true
+
     read :read do
       argument :quiz_id, :uuid do
         allow_nil? false
       end
+
+      # prepare fn query, _ ->
+      #   query
+      #   |> Ash.Query.load([:questions])
+      # end
 
       # to indicate that only one record will be returned
       get? true
@@ -63,12 +77,38 @@ defmodule PyqRatta.Databank.Quiz do
       change manage_relationship(:questions, type: :direct_control)
     end
 
-    # update :add_questions do
-    #   argument :questions, {:array, :map} do
+    update :update_quiz_with_question_ids do
+      accept []
+
+      argument :question_ids, {:array, :uuid} do
+        allow_nil? false
+      end
+
+      change manage_relationship(:question_ids, :questions, type: :append_and_remove)
+    end
+
+    # update :update_quiz_with_question_ids do
+    #   accept []
+
+    #   argument :question_ids, {:array, :uuid} do
     #     allow_nil? false
     #   end
 
-    #   change manage_relationship(:questions, type: :append_and_remove)
+    #   # change fn changeset, _ ->
+    #   #   Ash.Changeset.after_action(changeset, fn changeset, quiz ->
+    #   # question_ids = Ash.Changeset.get_argument(changeset, :question_ids)
+
+    #   manual PR.Databank.Manual.UdpateQuiz
+    # end
+
+    # update :update_quiz_with_question_ids do
+    #   accept []
+
+    #   argument :question_ids, {:array, :uuid} do
+    #     allow_nil? false
+    #   end
+
+    #   manual PyqRatta.Databank.Manual.UpdateQuiz
     # end
 
     # update :add_question_ids do
