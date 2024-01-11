@@ -79,7 +79,7 @@ defmodule PyqRatta.Databank.Quiz do
         allow_nil? false
       end
 
-      change manage_relationship(:question_ids, :questions, type: :append_and_remove)
+      change manage_relationship(:question_ids, :questions, type: :append)
     end
   end
 end
