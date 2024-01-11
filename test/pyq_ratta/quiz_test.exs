@@ -34,27 +34,13 @@ defmodule PyqRatta.QuizTest do
       questions =
         Factory.insert_many_questions()
 
-      # |> IO.inspect(label: "questions many inserted", limit: :infinity)
-
       qids = Enum.map(questions, & &1.id)
 
       {:ok, empty_quiz} = Quiz.create()
 
-      # assert {:ok, %{id: quiz_id}} =
-      #                Quiz.update_quiz_with_question_ids(empty_quiz, qids)
-      #                |> IO.inspect(label: "update_quiz_with_question_ids", limit: :infinity)
-
-      # Quiz.update_quiz_with_question_id(empty_quiz, qids |> hd())
       assert {:ok, %{id: quiz_id}} =
                Quiz.update_quiz_with_question_ids(empty_quiz, qids)
                |> IO.inspect(label: "update_quiz_with_question_ids", limit: :infinity)
-
-      # {:ok, quiz} =
-      #   Quiz.read(quiz_id)
-      #   |> IO.inspect(label: "Quiz.read(quiz_id)", limit: :infinity)
-
-      # Ash.Api.load(quiz, :questions)
-      # |> IO.inspect(label: "update questions ", limit: :infinity)
     end
   end
 end
