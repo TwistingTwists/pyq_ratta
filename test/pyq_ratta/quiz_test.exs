@@ -41,7 +41,6 @@ defmodule PyqRatta.QuizTest do
 
       assert {:ok, %{id: quiz_id}} =
                Quiz.update_quiz_with_question_ids(empty_quiz, qids)
-               |> IO.inspect(label: "update_quiz_with_question_ids", limit: :infinity)
     end
   end
 end
