@@ -19,15 +19,44 @@
 
 Creating APIs
 
-[ ] Databank.create_quiz(questions: [%{text: "asdf", image: "image/url/to/save/in/db", correct_answer: "A"},%{text: "second question", image: "image/url/to/save/in/db", correct_answer: "B"} ])
-[ ] Databank.Quiz.add_questions(questions: [1,2,3])
+------------
 
-[ ] Accounts.User - login with google (with identities?)
+[ ] Accounts.User - login with telegram / google (with identities?)
 
-[ ] ExGram for running quiz
-    [ ] QuizPractice.create(actor: user, quiz_id: 2, type: :wrong)
-    [ ] if :user  is given, run the quiz (quiz_id: 2) for the user, else try to find quiz.user
-    [ ] type: [:wrong_only, :new , :difficult_only]
+------------
+
+[ ] Quiz Interface
+
+    [x] `Databank.Quiz.create_quiz(questions: [%{text: "asdf", image: "image/url/to/save/in/db", correct_answer: "A"},%{text: "second question", image: "image/url/to/save/in/db", correct_answer: "B"} ])`
+    [x] Databank.Quiz.add_questions(questions: [1,2,3])
+
+    [ ] Create a User
+    [ ] Create a quiz based on (a) wrong questions for user: 2 , quiz_id: 2
+        [ ] Quiz.create_for_user(actor: user, quiz_id: 2, type: :wrong_only)
+        [ ] type: [:wrong_only, :new , :difficult_only]
+    [ ] User can answer a question from a quiz - and response is recorded in QuizPractice.Response
+        [ ] QuizPractice.Response.save(question, quiz, user, "A")
+    [ ] Get Next Question for the user
+        [ ] Quiz.next_question(quiz, user)
+            -> reads the latest Response by the user (Cachex { v0.3 })
+            -> Read next question in Quiz, [order_by: :created_at] (Cachex { v0.3 })
+            ->
+
+------------
+
+[ ] Running quiz (ExGram)
+
+    [ ] Scenario 1 : A quiz is run for all users. Irrespective of they join when. More like competition mode.
+        [ ] A QuizSession is started (ets backed). One or more users can join   it.
+
+    [x] Scenario 2 : Users can take a quiz when they are feel like it.
+        [ ] Each User has `UserAttemptServer` which manages the next question, response to previous question, timeouts.
+            [ ] Use AshStateMachine or GenStateMachine to manage quiz for the user. Use Ets data layer.
+            [ ] Hibernate the genserver if not being actively used.  { v0.3 }
+        [ ] TelegramBot.send_message(bot,chat_id,msg)
+
+
+
 
 2024-01-06
 
