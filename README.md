@@ -1,4 +1,4 @@
-# PyqRatta
+e# PyqRatta
 
 ## Notes from AshHq
 
@@ -53,7 +53,7 @@ Creating APIs
         [ ] Each User has `UserAttemptServer` which manages the next question, response to previous question, timeouts.
             [ ] Use AshStateMachine or GenStateMachine to manage quiz for the user. Use Ets data layer.
             [ ] Hibernate the genserver if not being actively used.  { v0.3 }
-        [ ] TelegramBot.send_message(bot,chat_id,msg)
+        [x] TelegramBot.send_message(bot,chat_id,msg)
 
 
 

@@ -1,11 +1,13 @@
 defmodule PyqRatta.Telegram.Quizbot do
   @bot :quiz_bot
 
+  alias PyqRatta.Accounts
+
   use ExGram.Bot, name: @bot
 
   def init(opts) do
     ExGram.set_my_description!(description: "Welcome to ReminderBot", bot: opts[:bot])
-    ExGram.set_my_name!(name: "ReminderBot", bot: opts[:bot])
+    # ExGram.set_my_name!(name: "ReminderBot", bot: opts[:bot])
     :ok
   end
 
@@ -21,18 +23,22 @@ defmodule PyqRatta.Telegram.Quizbot do
     context |> answer("Welcome to the bot! ")
   end
 
-  def handle({:text, "start", _msg}, context) do
+  def handle({:text, "start", msg}, context) do
     create_user(msg)
     |> IO.inspect(label: "created user ")
 
     context |> answer("Welcome to the bot! Let's play ")
   end
 
-  def create_user(%{chat: %{id: tg_id}} = msg) do
-    Accounts.register_with_telegram(tg_id)
+  def handle({:text, anything_else, msg}, context) do
+    context |> answer(anything_else)
   end
 
-  def create_user(_msg) do
+  def create_user(%{chat: %{id: tg_id}} = msg) do
+    Accounts.User.register_with_telegram(tg_id)
+  end
+
+  def create_user(msg) do
     raise "telegram id not found in msg: #{inspect(msg)}"
   end
 

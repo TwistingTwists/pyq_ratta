@@ -38,4 +38,9 @@ defmodule PyqRatta.Factory do
         end)
     end
   end
+
+  ########## Accounts ##########
+  def telegram_ids do
+    [1, 2, 3, 3, 4, 5, 6]
+  end
 end

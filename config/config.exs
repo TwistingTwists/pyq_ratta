@@ -12,12 +12,12 @@ config :pyq_ratta,
     %{
       module_name: PyqRatta.Telegram.Quizbot,
       token: System.get_env("QUIZ_BOT_TOKEN"),
-      name: "@rem123_me_bot"
+      name: System.get_env("QUIZ_BOT_NAME")
     }
   ]
 
 config :pyq_ratta,
-  ash_apis: [PyqRatta.Databank],
+  ash_apis: [PyqRatta.Databank, PyqRatta.Accounts],
   # PyqRatta.QuizPractice],
   ecto_repos: [PyqRatta.Repo],
   generators: [timestamp_type: :utc_datetime]
