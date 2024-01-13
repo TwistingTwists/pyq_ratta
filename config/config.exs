@@ -8,6 +8,15 @@
 import Config
 
 config :pyq_ratta,
+  tg_bots: [
+    %{
+      module_name: PyqRatta.Telegram.Quizbot,
+      token: System.get_env("QUIZ_BOT_TOKEN"),
+      name: "@rem123_me_bot"
+    }
+  ]
+
+config :pyq_ratta,
   ash_apis: [PyqRatta.Databank],
   # PyqRatta.QuizPractice],
   ecto_repos: [PyqRatta.Repo],
