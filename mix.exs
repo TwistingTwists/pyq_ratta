@@ -34,8 +34,8 @@ defmodule PyqRatta.MixProject do
       {:ash_authentication_phoenix, "~> 1.8"},
       {:ash_authentication, "~> 3.11"},
       {:ash_phoenix, "~> 1.2"},
-      {:ash_postgres, "~> 1.3"},
-      {:ash, "~> 2.17"},
+      {:ash_postgres, "~> 1.4"},
+      {:ash, "~> 2.18"},
       #  UI components
       {:live_select, "~> 1.0"},
       # {:flashy, "~> 0.2.5"},
