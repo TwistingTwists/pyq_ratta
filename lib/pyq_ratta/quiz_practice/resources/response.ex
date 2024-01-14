@@ -1,132 +1,145 @@
-# defmodule PyqRatta.QuizPractice.Response do
-#   require Logger
+defmodule PyqRatta.QuizPractice.Response do
+  require Logger
 
-#   use Ash.Resource,
-#     data_layer: AshPostgres.DataLayer,
-#     extensions: [PyqRatta.Extensions.AddTimestamps]
+  use Ash.Resource,
+    data_layer: AshPostgres.DataLayer
 
-#   code_interface do
-#     define_for PyqRatta.QuizPractice
+  code_interface do
+    define_for PyqRatta.QuizPractice
 
-#     define :create, action: :create
-#     #       define :for_user, action: :for_user
-#     #       define :get_by, action: :get_by
-#     #       define :lookahead, action: :lookahead
-#     #       define :next, action: :next
-#     #       define :oldest_untried_card, action: :oldest_untried_card
-#   end
+    define :save, action: :save
+    define :of_user_tgid, args: [:telegram_id]
+    define :of_user_userid
+    #       define :for_user, action: :for_user
+    #       define :get_by, action: :get_by
+    #       define :lookahead, action: :lookahead
+    #       define :next, action: :next
+    #       define :oldest_untried_card, action: :oldest_untried_card
+  end
 
-#   actions do
-#     defaults [:read, :update, :create]
+  actions do
+    defaults [:read, :update]
+    # defaults [:read, :update, :create]
 
-#     #       read :for_user do
-#     #         filter expr(user_id == ^actor(:id))
-#     #       end
+    read :of_user_tgid do
+      argument :telegram_id, :decimal, allow_nil?: false
+      # filter expr(user_id == ^actor(:id))
+      prepare fn query, context ->
+        Ash.Query.before_action(query, fn query ->
+          query |> IO.inspect(label: "this is query")
 
-#     #   create :create do
-#     #     change relate_actor(:user)
-#     #   end
+          # Ash.Query.set_result(query, {:ok, results})
+        end)
+      end
+    end
 
-#     #       read :next do
-#     #         get? true
+    read :of_user_userid do
+      filter expr(user_id == ^actor(:id))
+    end
 
-#     #         prepare build(limit: 1, sort: [retry_at: :asc])
+    create :save do
+      change relate_actor(:user)
+    end
 
-#     #         filter expr(user_id == ^actor(:id) and retry_at <= now())
+    #     #       read :next do
+    #     #         get? true
 
-#     #         prepare fn query, context ->
-#     #           Ash.Query.after_action(query, fn
-#     #             _, [] ->
-#     #               Logger.debug("No cards due 📭")
+    #     #         prepare build(limit: 1, sort: [retry_at: :asc])
 
-#     #               reviewed_today_count =
-#     #                 Red.Accounts.load!(
-#     #                   context.actor,
-#     #                   [:count_cards_reviewed_today]
-#     #                 ).count_cards_reviewed_today
+    #     #         filter expr(user_id == ^actor(:id) and retry_at <= now())
 
-#     #               if reviewed_today_count < context.actor.daily_goal do
-#     #                 Logger.debug("Grabbing a new card ✨")
-#     #                 Card.oldest_untried_card(actor: context.actor)
-#     #               else
-#     #                 Logger.debug("Looking Ahead 🔭")
-#     #                 Card.lookahead(actor: context.actor)
-#     #               end
+    #     #         prepare fn query, context ->
+    #     #           Ash.Query.after_action(query, fn
+    #     #             _, [] ->
+    #     #               Logger.debug("No cards due 📭")
 
-#     #             _, results ->
-#     #               Logger.debug("A card was found with retry_at <= now ✅")
-#     #               {:ok, results}
-#     #           end)
-#     #         end
-#     #   end
+    #     #               reviewed_today_count =
+    #     #                 Red.Accounts.load!(
+    #     #                   context.actor,
+    #     #                   [:count_cards_reviewed_today]
+    #     #                 ).count_cards_reviewed_today
 
-#     #     #   read :lookahead do
-#     #     #     prepare build(limit: 1, sort: [retry_at: :asc])
+    #     #               if reviewed_today_count < context.actor.daily_goal do
+    #     #                 Logger.debug("Grabbing a new card ✨")
+    #     #                 Card.oldest_untried_card(actor: context.actor)
+    #     #               else
+    #     #                 Logger.debug("Looking Ahead 🔭")
+    #     #                 Card.lookahead(actor: context.actor)
+    #     #               end
 
-#     #     #     filter expr(user_id == ^actor(:id) and retry_at <= from_now(20, :minute))
-#     #     #   end
+    #     #             _, results ->
+    #     #               Logger.debug("A card was found with retry_at <= now ✅")
+    #     #               {:ok, results}
+    #     #           end)
+    #     #         end
+    #     #   end
 
-#     #     #   read :oldest_untried_card do
-#     #     #     prepare build(limit: 1, sort: [created_at: :asc])
+    #     #     #   read :lookahead do
+    #     #     #     prepare build(limit: 1, sort: [retry_at: :asc])
 
-#     #     #     filter expr(is_nil(retry_at) and user_id == ^actor(:id))
-#     #     #   end
+    #     #     #     filter expr(user_id == ^actor(:id) and retry_at <= from_now(20, :minute))
+    #     #     #   end
 
-#     #     #   read :get_by do
-#     #     #     filter expr(user_id == ^actor(:id))
-#     #     #     get_by [:word]
-#     #     #   end
+    #     #     #   read :oldest_untried_card do
+    #     #     #     prepare build(limit: 1, sort: [created_at: :asc])
 
-#     #     #   update :try do
-#     #     #     accept [:tried_spelling]
-#     #     #     argument(:tried_spelling, :string, allow_nil?: false)
-#     #     #     manual Red.Practice.Card.Try
-#     #     #   end
-#   end
+    #     #     #     filter expr(is_nil(retry_at) and user_id == ^actor(:id))
+    #     #     #   end
 
-#   #     # calculations do
-#   #     #   calculate :interval_in_seconds,
-#   #     #             :integer,
-#   #     #             expr(fragment("EXTRACT(EPOCH FROM ?)", retry_at - tried_at))
-#   #     # end
+    #     #     #   read :get_by do
+    #     #     #     filter expr(user_id == ^actor(:id))
+    #     #     #     get_by [:word]
+    #     #     #   end
 
-#   attributes do
-#     integer_primary_key :id
+    #     #     #   update :try do
+    #     #     #     accept [:tried_spelling]
+    #     #     #     argument(:tried_spelling, :string, allow_nil?: false)
+    #     #     #     manual Red.Practice.Card.Try
+    #     #     #   end
+    #   end
 
-#     #       attribute :correct_streak, :integer, allow_nil?: false, default: 0
-#     attribute :attempted_answer, :string, allow_nil?: false
-#     attribute :retry_at, :utc_datetime, allow_nil?: true
-#     #       attribute :word, :string, allow_nil?: false
+    #   #     # calculations do
+    #   #     #   calculate :interval_in_seconds,
+    #   #     #             :integer,
+    #   #     #             expr(fragment("EXTRACT(EPOCH FROM ?)", retry_at - tried_at))
+  end
 
-#     # response cannot be edited. so, created_at == tried_at
-#     # create_timestamp :created_at
-#     # create_timestamp :updated_at
-#   end
+  attributes do
+    # integer_primary_key :id
+    uuid_primary_key :id
 
-#   identities do
-#     identity :unique_response, [:quiz_id, :question_id]
-#   end
+    #       attribute :correct_streak, :integer, allow_nil?: false, default: 0
+    attribute :attempted_answer, :string, allow_nil?: false
+    attribute :retry_at, :utc_datetime, allow_nil?: true
+    #       attribute :word, :string, allow_nil?: false
 
-#   relationships do
-#     #       belongs_to :user, Red.Accounts.User,
-#     #         attribute_writable?: true,
-#     #         attribute_type: :integer,
-#     #         allow_nil?: false
-#     belongs_to :quiz, PyqRatta.Databank.Quiz,
-#       api: PyqRatta.Databank,
-#       attribute_writable?: true,
-#       attribute_type: :integer,
-#       allow_nil?: false
+    # response cannot be edited. so, created_at == tried_at
+    create_timestamp :created_at
+  end
 
-#     belongs_to :question, PyqRatta.Databank.Question,
-#       api: PyqRatta.Databank,
-#       attribute_writable?: true,
-#       attribute_type: :integer,
-#       allow_nil?: false
-#   end
+  # identities do
+  #   identity :unique_response, [:quiz_id, :question_id]
+  # end
 
-#   postgres do
-#     table "response"
-#     repo PyqRatta.Repo
-#   end
-# end
+  relationships do
+    belongs_to :user, PyqRatta.Accounts.User,
+      api: PyqRatta.Accounts,
+      attribute_writable?: true,
+      allow_nil?: false
+
+    belongs_to :quiz, PyqRatta.Databank.Quiz,
+      api: PyqRatta.Databank,
+      attribute_writable?: true,
+      allow_nil?: false
+
+    belongs_to :question, PyqRatta.Databank.Question,
+      api: PyqRatta.Databank,
+      attribute_writable?: true,
+      allow_nil?: false
+  end
+
+  postgres do
+    table "user_quiz_response"
+    repo PyqRatta.Repo
+  end
+end

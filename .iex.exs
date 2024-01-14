@@ -3,6 +3,7 @@ alias PyqRatta.Databank.Question
 alias PyqRatta.Factory
 alias PyqRatta.Databank.QuizQuestion
 alias PyqRatta.Accounts
+alias PyqRatta.QuizPractice.Response
 
 # %{type: type, question_text: question_text} =
 #   question_params =
@@ -74,3 +75,10 @@ alias PyqRatta.Accounts
 #        )
 
 # change manage_relationship(:question_ids, :questions, type: :direct_control)
+me_tg_id = 417_851_214
+
+# Response.of_user_tgid(me_tg_id)
+#   |> IO.inspect(label: "Reponse for the telegram user")
+
+
+Response.of_user_tgid(me_tg_id)

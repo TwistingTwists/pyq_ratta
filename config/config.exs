@@ -17,8 +17,7 @@ config :pyq_ratta,
   ]
 
 config :pyq_ratta,
-  ash_apis: [PyqRatta.Databank, PyqRatta.Accounts],
-  # PyqRatta.QuizPractice],
+  ash_apis: [PyqRatta.Databank, PyqRatta.Accounts, PyqRatta.QuizPractice],
   ecto_repos: [PyqRatta.Repo],
   generators: [timestamp_type: :utc_datetime]
 

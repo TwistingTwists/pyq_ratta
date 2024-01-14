@@ -26,9 +26,9 @@ defmodule PyqRatta.Accounts.User do
     update_timestamp :updated_at
   end
 
-  # relationships do
-  #   has_many :cards, Red.Practice.Card
-  # end
+  relationships do
+    has_many :responses, PyqRatta.QuizPractice.Response, api: PyqRatta.QuizPractice
+  end
 
   postgres do
     table "users"

@@ -13,6 +13,22 @@ e# PyqRatta
 * attachments
     references message
 
+
+## v0.2
+
+2024-01-13
+
+Features:
+[ ] Analytics on 'wrong' questions and reminders
+[ ] Caching for Quiz / Question
+[ ] UI to monitor realtime progress of each user
+[ ] Make learning sharable.
+    [ ] post in group - leaderboard
+    [ ] LiveLink to show leaderboard
+
+
+
+
 2024-01-07
 
 ## v0.1.2
@@ -21,7 +37,7 @@ Creating APIs
 
 ------------
 
-[ ] Accounts.User - login with telegram / google (with identities?)
+[x] Accounts.User - login with telegram / google (with identities?)
 
 ------------
 
@@ -30,7 +46,7 @@ Creating APIs
     [x] `Databank.Quiz.create_quiz(questions: [%{text: "asdf", image: "image/url/to/save/in/db", correct_answer: "A"},%{text: "second question", image: "image/url/to/save/in/db", correct_answer: "B"} ])`
     [x] Databank.Quiz.add_questions(questions: [1,2,3])
 
-    [ ] Create a User
+    [x] Create a User
     [ ] Create a quiz based on (a) wrong questions for user: 2 , quiz_id: 2
         [ ] Quiz.create_for_user(actor: user, quiz_id: 2, type: :wrong_only)
         [ ] type: [:wrong_only, :new , :difficult_only]
