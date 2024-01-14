@@ -30,18 +30,25 @@ defmodule PyqRatta.MixProject do
   defp deps do
     [
       # all ash
+
       {:ash_admin, "~> 0.10"},
       {:ash_authentication_phoenix, "~> 1.8"},
       {:ash_authentication, "~> 3.11"},
       {:ash_phoenix, "~> 1.2"},
       {:ash_postgres, "~> 1.4"},
       {:ash, "~> 2.18"},
+      {:ash_state_machine, "~> 0.2.2"},
+      {:ash_oban, "~> 0.1.13"},
+
       #  UI components
+
       {:live_select, "~> 1.0"},
       # {:flashy, "~> 0.2.5"},
       {:flashy, git: "https://github.com/sezaru/flashy", branch: "master"},
       {:petal_components, "~> 1.7"},
+
       # phoenix core
+
       {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
@@ -61,7 +68,9 @@ defmodule PyqRatta.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
+
       # telegram
+
       {:ex_gram, "~> 0.50.0"},
       {:tesla, "~> 1.2"},
       {:hackney, "~> 1.12"},
@@ -69,6 +78,7 @@ defmodule PyqRatta.MixProject do
       # {:ecto_erd, "~> 0.5", only: :dev}
 
       # Testing
+
       # {:ex_machina, "~> 2.7"},
       {:faker, "~> 0.17"},
       {:mock, "~> 0.3.8", only: :test}

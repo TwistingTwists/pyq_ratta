@@ -42,7 +42,7 @@ defmodule PyqRatta.Databank.Quiz do
     define :all
     define :update_quiz_with_question_ids, args: [:question_ids]
     # define :update_quiz_with_question_id, args: [:question_id]
-    define :read, args: [:quiz_id]
+    define :read_by_id, args: [:quiz_id]
   end
 
   actions do
@@ -59,6 +59,10 @@ defmodule PyqRatta.Databank.Quiz do
       get? true
 
       filter expr(id == ^arg(:quiz_id))
+
+      prepare fn query, _context ->
+        Ash.Query.load(query, [:questions])
+      end
     end
 
     create :create_quiz_from_questions do

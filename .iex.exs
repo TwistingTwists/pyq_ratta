@@ -1,9 +1,9 @@
 alias PyqRatta.Databank.Quiz
 alias PyqRatta.Databank.Question
-alias PyqRatta.Factory
 alias PyqRatta.Databank.QuizQuestion
 alias PyqRatta.Accounts
 alias PyqRatta.QuizPractice.Response
+alias PyqRatta.Factory
 
 # %{type: type, question_text: question_text} =
 #   question_params =
@@ -80,5 +80,20 @@ me_tg_id = 417_851_214
 # Response.of_user_tgid(me_tg_id)
 #   |> IO.inspect(label: "Reponse for the telegram user")
 
-
 Response.of_user_tgid(me_tg_id)
+
+##### struct works #####
+
+# defmodule H do
+
+#   use TypedStruct
+
+#     typedstruct enforce: true , visibility: :opaque , module: State do
+#       @moduledoc "Internal state -- used to ensure that user_id and quiz_id are non_nil at all times."
+#       field :user_id, String.t()
+#       field :quiz_id, String.t()
+#     end
+
+# end
+# opts = [user_id: " as", quiz_id: "asdf", a: "asdfff"]
+# struct(H.State, Map.new(opts))

@@ -56,7 +56,7 @@ defmodule PyqRatta.Accounts.User do
     end
 
     read :get_by do
-      get_by [:telegram_id]
+      get_by :telegram_id
     end
   end
 

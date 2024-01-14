@@ -19,9 +19,11 @@ defmodule PyqRatta.Application do
         # Start the Finch HTTP client for sending emails
         {Finch, name: PyqRatta.Finch},
         # Start to serve requests, typically the last entry
-        PyqRattaWeb.Endpoint
-      ] ++
-        add_bots()
+        PyqRattaWeb.Endpoint,
+        # Start the unique task dependencies
+        Livebook.Utils.UniqueTask
+      ]
+    ++ add_bots()
 
     opts = [strategy: :one_for_one, name: PyqRatta.Supervisor]
     Supervisor.start_link(children, opts)
