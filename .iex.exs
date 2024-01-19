@@ -3,6 +3,7 @@ alias PyqRatta.Databank.Question
 alias PyqRatta.Databank.QuizQuestion
 alias PyqRatta.Accounts
 alias PyqRatta.QuizPractice.Response
+alias PyqRatta.Workers.UserAttemptServer, as: UAS
 alias PyqRatta.Factory
 
 # %{type: type, question_text: question_text} =

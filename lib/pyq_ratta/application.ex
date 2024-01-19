@@ -11,9 +11,7 @@ defmodule PyqRatta.Application do
         PyqRatta.Repo,
         {DNSCluster, query: Application.get_env(:pyq_ratta, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: PyqRatta.PubSub},
-        {Registry, keys: :unique, name: PyqRatta.Workers.QuizServerRegistry},
-        {Registry, keys: :unique, name: PyqRatta.Workers.UserAttemptServerRegistry},
-        {DynamicSupervisor, strategy: :one_for_one, name: PyqRatta.User.DynamicSupervisor},
+        PyqRatta.Telegram.Commands,
         {PartitionSupervisor,
          child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisors},
         # Start the Finch HTTP client for sending emails
@@ -22,8 +20,8 @@ defmodule PyqRatta.Application do
         PyqRattaWeb.Endpoint,
         # Start the unique task dependencies
         Livebook.Utils.UniqueTask
-      ]
-    ++ add_bots()
+      ] ++
+        add_bots()
 
     opts = [strategy: :one_for_one, name: PyqRatta.Supervisor]
     Supervisor.start_link(children, opts)

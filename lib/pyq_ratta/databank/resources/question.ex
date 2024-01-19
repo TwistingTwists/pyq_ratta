@@ -22,7 +22,7 @@ defmodule PyqRatta.Databank.Question do
     attribute :tags, {:array, :string}, default: []
 
     create_timestamp :created_at
-    create_timestamp :updated_at
+    update_timestamp :updated_at
   end
 
   relationships do

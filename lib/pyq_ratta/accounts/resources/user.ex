@@ -55,15 +55,17 @@ defmodule PyqRatta.Accounts.User do
       end
     end
 
-    read :get_by do
-      get_by :telegram_id
-    end
+    # read :get_by_tgid do
+    #   get_by :telegram_id
+    # end
   end
 
   code_interface do
     define_for PyqRatta.Accounts
 
-    define :get_by, action: :get_by
+    # define :get_by_tgid
+    define :by_tgid, action: :read, get_by: [:telegram_id]
+
     define :register_with_telegram, args: [:telegram_id]
   end
 end

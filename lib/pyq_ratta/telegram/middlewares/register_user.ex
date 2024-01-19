@@ -21,8 +21,8 @@ defmodule Telegram.Middlewares.RegisterUser do
   def call(cnt, _), do: cnt
 
   def maybe_register_user(tg_id, user) when not is_nil(tg_id) do
-    case User.get_by(%{telegram_id: tg_id}) do
-      {:ok, %User{id: _id}} = user ->
+    case User.by_tgid(tg_id) do
+      {:ok, %User{id: _id} = user} ->
         Logger.debug("User Already exists : #{inspect(user.id)}")
         user
 
