@@ -1,4 +1,4 @@
-e# PyqRatta
+# PyqRatta
 
 ## Notes from AshHq
 
@@ -13,66 +13,26 @@ e# PyqRatta
 * attachments
     references message
 
+    Here is the scenario :
 
-## v0.2
+    1. a quiz has_many questions
+    2. a user wants to attempt a quiz. UserStateMachine (USM, for short) will manage the session for the user
+    3. USM loads all the questions for the quiz and sets in `:start` state.
+    `  start -> send_next_question -> send_results -> stop`
+    ```elixir
 
-2024-01-13
+      state_machine do
+        initial_states [:start]
+        default_initial_state :start
 
-Features:
-[ ] Analytics on 'wrong' questions and reminders
-[ ] Caching for Quiz / Question
-[ ] UI to monitor realtime progress of each user
-[ ] Make learning sharable.
-    [ ] post in group - leaderboard
-    [ ] LiveLink to show leaderboard
-
-
-
-
-2024-01-07
-
-## v0.1.2
-
-Creating APIs
-
-------------
-
-[x] Accounts.User - login with telegram / google (with identities?)
-
-------------
-
-[ ] Quiz Interface
-
-    [x] `Databank.Quiz.create_quiz(questions: [%{text: "asdf", image: "image/url/to/save/in/db", correct_answer: "A"},%{text: "second question", image: "image/url/to/save/in/db", correct_answer: "B"} ])`
-    [x] Databank.Quiz.add_questions(questions: [1,2,3])
-
-    [x] Create a User
-    [ ] Create a quiz based on (a) wrong questions for user: 2 , quiz_id: 2
-        [ ] Quiz.create_for_user(actor: user, quiz_id: 2, type: :wrong_only)
-        [ ] type: [:wrong_only, :new , :difficult_only]
-    [ ] User can answer a question from a quiz - and response is recorded in QuizPractice.Response
-        [ ] QuizPractice.Response.save(question, quiz, user, "A")
-    [ ] Get Next Question for the user
-        [ ] Quiz.next_question(quiz, user)
-            -> reads the latest Response by the user (Cachex { v0.3 })
-            -> Read next question in Quiz, [order_by: :created_at] (Cachex { v0.3 })
-            ->
-
-------------
-
-[ ] Running quiz (ExGram)
-
-    [ ] Scenario 1 : A quiz is run for all users. Irrespective of they join when. More like competition mode.
-        [ ] A QuizSession is started (ets backed). One or more users can join   it.
-
-    [x] Scenario 2 : Users can take a quiz when they are feel like it.
-        [ ] Each User has `UserAttemptServer` which manages the next question, response to previous question, timeouts.
-            [ ] Use AshStateMachine or GenStateMachine to manage quiz for the user. Use Ets data layer.
-            [ ] Hibernate the genserver if not being actively used.  { v0.3 }
-        [x] TelegramBot.send_message(bot,chat_id,msg)
-
-
-
+        transitions do
+          transition :begin_quiz, from: :start, to: :send_next_question
+          transition :continue_quiz, from: :send_next_question, to: :send_next_question
+          transition :send_results, from: :send_next_question, to: :send_results
+          transition :error, from: [:start, :send_next_question, :sent_results], to: :stop
+        end
+      end
+    ```
 
 2024-01-06
 
