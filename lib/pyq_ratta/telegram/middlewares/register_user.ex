@@ -27,7 +27,7 @@ defmodule Telegram.Middlewares.RegisterUser do
         user
 
       anything_else ->
-        Logger.debug("Registering User with : #{inspect(anything_else)}")
+        Logger.error("Registering User with : #{inspect(anything_else)}")
         User.register_with_telegram(tg_id)
     end
   end

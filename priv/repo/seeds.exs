@@ -10,14 +10,56 @@ alias PyqRatta.Accounts
 
 # create questions
 question_params = [
-%{question_text: " question 1", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.55.jpeg",correct_answer_text: "A",type: "MCQ"},
-%{question_text: " question 1", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.59.jpeg",correct_answer_text: "A",type: "MCQ"},
-%{question_text: " question 2", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.58.jpeg",correct_answer_text: "A",type: "MCQ"},
-%{question_text: " question 3 ", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.54.jpeg",correct_answer_text: "A",type: "MCQ"},
-%{question_text: " question 4", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.57.jpeg",correct_answer_text: "A",type: "MCQ"},
-%{question_text: " question 5", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.56.jpeg",correct_answer_text: "A",type: "MCQ"},
-%{question_text: " question 6", question_image: "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.33.00.jpeg",correct_answer_text: "A",type: "MCQ"}]
-
+  %{
+    question_text: " question 1",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.55.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  },
+  %{
+    question_text: " question 1",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.59.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  },
+  %{
+    question_text: " question 2",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.58.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  },
+  %{
+    question_text: " question 3 ",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.54.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  },
+  %{
+    question_text: " question 4",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.57.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  },
+  %{
+    question_text: " question 5",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.32.56.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  },
+  %{
+    question_text: " question 6",
+    question_image:
+      "/Users/abhishek/Downloads/telegram/database_qs/photo_2024-01-19_16.33.00.jpeg",
+    correct_answer_text: "A",
+    type: "MCQ"
+  }
+]
 
 questions =
   Enum.map(question_params, fn qparam ->

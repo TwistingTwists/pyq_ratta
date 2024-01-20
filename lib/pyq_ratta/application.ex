@@ -12,8 +12,9 @@ defmodule PyqRatta.Application do
         {DNSCluster, query: Application.get_env(:pyq_ratta, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: PyqRatta.PubSub},
         PyqRatta.Telegram.Commands,
-        {PartitionSupervisor,
-         child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisors},
+        # {PartitionSupervisor,
+        # child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisor},
+        {Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisor},
         # Start the Finch HTTP client for sending emails
         {Finch, name: PyqRatta.Finch},
         # Start to serve requests, typically the last entry

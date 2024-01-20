@@ -44,12 +44,15 @@ defmodule PyqRatta.Telegram.Quizbot do
     Commands.start_quiz(user_id, quiz_id)
   end
 
-  def handle({:text, "start", msg}, context) do
-    # create_user(msg)
-    # |> IO.inspect(label: "created user ")
-
+  def handle({:text, _any, msg}, context) do
     {msg, opts} = MF.welcome_message()
     answer(context, msg, opts)
+  end
+
+  ######## help ########
+
+  def handle({:command, "help", msg}, context) do
+    answer(context, "help", opts)
   end
 
   ######## quizlist ########
@@ -60,17 +63,33 @@ defmodule PyqRatta.Telegram.Quizbot do
 
   ######## reply to quiz question ########
 
-  def handle({:callback_query, %{chat_instance: chat_instance, data: data, from: from, id: msg_id_maybe, message: %{message_id: message_id}}=  msg}, context) do
+  def handle(
+        {:callback_query,
+         %{
+           chat_instance: chat_instance,
+           data: data,
+           from: from,
+           id: msg_id_maybe,
+           message: %{message_id: message_id}
+         } = msg},
+        context
+      ) do
     response = "your ans: #{data}"
     opts = []
-    UAS.next(from.id)
+    Process.sleep(500)
+    UAS.next(from.id, data)
 
     chat_id = msg.message.chat.id
 
-    ExGram.edit_message_reply_markup(chat_id: chat_id, message_id: message_id, reply_markup: %ExGram.Model.InlineKeyboardMarkup{}, bot: bot() )
-    |> MyInspect.print()
-  end
+    ExGram.edit_message_reply_markup(
+      chat_id: chat_id,
+      message_id: message_id,
+      reply_markup: %ExGram.Model.InlineKeyboardMarkup{},
+      bot: bot()
+    )
 
+    # |> MyInspect.print()
+  end
 
   ######## echo message ########
 
@@ -79,14 +98,6 @@ defmodule PyqRatta.Telegram.Quizbot do
 
     answer(context, msg, opts)
   end
-
-  # def create_user(%{chat: %{id: tg_id}} = msg) do
-  #   Accounts.User.register_with_telegram(tg_id)
-  # end
-
-  # def create_user(msg) do
-  #   raise "telegram id not found in msg: #{inspect(msg)}"
-  # end
 
   # # error handling via custom error module
   # https://michal.muskala.eu/post/error-handling-in-elixir-libraries/

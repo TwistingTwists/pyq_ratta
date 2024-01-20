@@ -28,7 +28,8 @@ defmodule PyqRatta.Telegram.Commands do
   def init({}) do
     children = [
       {Registry, name: @registry, keys: :unique},
-      {DynamicSupervisor, name: @dynamic_supervisor, strategy: :one_for_one}
+      {DynamicSupervisor, name: @dynamic_supervisor, strategy: :one_for_one},
+      PyqRatta.Telegram.QuizChecker
     ]
     |> MyInspect.print()
 
@@ -74,12 +75,9 @@ defmodule PyqRatta.Telegram.Commands do
             nil
           end
       end
-# |> MyInspect.print()
     # ref = Process.monitor(pid)
 
     MF.quiz_started(user: user_id,quiz: quiz_id)
-    # |> MyInspect.print()
-
   end
 
   def via(user_id) do
