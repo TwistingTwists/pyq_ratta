@@ -10,7 +10,7 @@ defmodule PyqRatta.Telegram.Commands do
   use Supervisor
 
   alias PyqRatta.Telegram.Quizbot
-  alias  PyqRatta.Telegram.SendHelpers
+  alias PyqRatta.Telegram.SendHelpers
   alias PyqRatta.Telegram.MessageFormatter, as: MF
 
   require MyInspect
@@ -26,29 +26,29 @@ defmodule PyqRatta.Telegram.Commands do
 
   @impl true
   def init({}) do
-    children = [
-      {Registry, name: @registry, keys: :unique},
-      {DynamicSupervisor, name: @dynamic_supervisor, strategy: :one_for_one},
-      PyqRatta.Telegram.QuizChecker
-    ]
-    |> MyInspect.print()
+    children =
+      [
+        {Registry, name: @registry, keys: :unique},
+        {DynamicSupervisor, name: @dynamic_supervisor, strategy: :one_for_one},
+        PyqRatta.Telegram.QuizChecker
+      ]
+      |> MyInspect.print()
 
     Supervisor.init(children, strategy: :one_for_all)
   end
 
   ###### interface with user / db ######
 
-  def send_to_tg(user_id, question)  do
+  def send_to_tg(user_id, question) do
     do_send_question(user_id, question)
   end
 
-  def do_send_question(user_tg_id, %{question_image: q_img}= _question) do
+  def do_send_question(user_tg_id, %{question_image: q_img} = _question) do
     {img_caption, opts} = MF.choices_keyboard()
     tg_msg_opts = opts ++ [caption: img_caption]
 
-    {:ok, returned_msg} = SendHelpers.send(q_img,user_tg_id, Quizbot.bot(), tg_msg_opts)
+    {:ok, returned_msg} = SendHelpers.send(q_img, user_tg_id, Quizbot.bot(), tg_msg_opts)
   end
-
 
   ###### interface with ExGram low level API ######
 
@@ -64,20 +64,26 @@ defmodule PyqRatta.Telegram.Commands do
           pid
 
         [] ->
-        # child_spec = %{id: user_id, start: {@task, :start_link, [user_tg_id: user_id, quiz_id: quiz_id]}, type: :worker}
-        args = [user_tg_id: user_id, quiz_id: quiz_id]
-          case DynamicSupervisor.start_child(@dynamic_supervisor,{@task, args}) do
-            {:ok, pid} -> pid
-            {:error, {:already_started, pid}} -> pid
+          # child_spec = %{id: user_id, start: {@task, :start_link, [user_tg_id: user_id, quiz_id: quiz_id]}, type: :worker}
+          args = [user_tg_id: user_id, quiz_id: quiz_id]
+
+          case DynamicSupervisor.start_child(@dynamic_supervisor, {@task, args}) do
+            {:ok, pid} ->
+              pid
+
+            {:error, {:already_started, pid}} ->
+              pid
+
             unknown ->
-            Logger.error("unknown return by DynamicSupervisor.start_child
-              #{inspect unknown}")
-            nil
+              Logger.error("unknown return by DynamicSupervisor.start_child
+              #{inspect(unknown)}")
+              nil
           end
       end
+
     # ref = Process.monitor(pid)
 
-    MF.quiz_started(user: user_id,quiz: quiz_id)
+    MF.quiz_started(user: user_id, quiz: quiz_id)
   end
 
   def via(user_id) do

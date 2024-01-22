@@ -49,10 +49,10 @@ defmodule PyqRatta.Telegram.Quizbot do
     answer(context, msg, opts)
   end
 
-  ######## help ########
+  ######## any other command ########
 
-  def handle({:command, "help", msg}, context) do
-    answer(context, "help", opts)
+  def handle({:command, _any, msg}, context) do
+    answer(context, "This is not supported at the moment.")
   end
 
   ######## quizlist ########
@@ -76,7 +76,7 @@ defmodule PyqRatta.Telegram.Quizbot do
       ) do
     response = "your ans: #{data}"
     opts = []
-    Process.sleep(500)
+    Process.sleep(1000)
     UAS.next(from.id, data)
 
     chat_id = msg.message.chat.id

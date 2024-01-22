@@ -95,6 +95,7 @@ defmodule PyqRattaWeb do
       import Helpers.ColorIO
       # Add Flash notifications functionality
       import Flashy
+      import Helpers.ColorIO
 
       # # does not work.
       # # https://elixirforum.com/t/is-there-a-way-to-suppress-warnings-about-unused-variables/8637/11

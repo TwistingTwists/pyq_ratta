@@ -16,6 +16,8 @@ defmodule PyqRatta.Workers.UserAttemptServer do
   require MyInspect
   require Logger
 
+  import Helpers.ColorIO
+
   typedstruct enforce: true, visibility: :opaque, module: Internal do
     @moduledoc "Internal state -- used to ensure that user_id and quiz_id are non_nil at all times."
     field :user_tg_id, Integer.t()
@@ -84,27 +86,7 @@ defmodule PyqRatta.Workers.UserAttemptServer do
       end)
 
     state = %{state | ref: task.ref}
-
-    case do_send_next_question(state) do
-      {:finished, new_state} ->
-        Logger.error("QUIZ FINISHED SUCCESSFULLY")
-        # shutdown genserver.
-        # send results to the original caller
-        # {:finished,new_state}
-
-        {msg, opts} = MF.quiz_finished()
-        ExGram.send_message(state.user_tg_id, msg, opts)
-        Process.sleep(500)
-        # {:stop, {:shutdown, :quiz_finished}, new_state}
-        {:stop, :normal, new_state}
-
-      {question, new_state} ->
-        # schedule_next_question()
-        # send the question to whosoever asked.
-        Commands.send_to_tg(state.user_tg_id, question)
-        # return new_state
-        {:noreply, new_state}
-    end
+    {:noreply, state}
   end
 
   def handle_call(:get_state, from, state) do
@@ -115,13 +97,44 @@ defmodule PyqRatta.Workers.UserAttemptServer do
   def handle_info({ref, answer}, %{ref: ref} = state) do
     # We don't care about the DOWN message now, so let's demonitor and flush it
     Process.demonitor(ref, [:flush])
-    # Do something with the result and then return
-    {:noreply, %{state | ref: nil}}
+    answer |> red("received from the task that finished ")
+    # if task finished successfully, then we send the next question or shutdown the genserver
+
+    state = %{state | ref: nil}
+
+    case do_send_next_question(state) do
+      {:finished, new_state} ->
+        new_state.previous_question |> purple("QUIZ FINISHED SUCCESSFULLY")
+        # shutdown genserver.
+        # send results to the original caller
+        # {:finished,new_state}
+
+        {msg, opts} = MF.quiz_finished()
+        ExGram.send_message(state.user_tg_id, msg, opts)
+
+        Process.sleep(500)
+        |> green("Shutting down the genserver")
+
+        # {:stop, {:shutdown, :quiz_finished}, new_state}
+        {:stop, :normal, new_state}
+
+      {question, new_state} ->
+        # schedule_next_question()
+        # send the question to whosoever asked.
+        yellow("Scheduling next question genserver")
+        Commands.send_to_tg(state.user_tg_id, question)
+        # return new_state
+        {:noreply, new_state}
+    end
   end
 
   # The task failed
   def handle_info({:DOWN, ref, :process, _pid, _reason}, %{ref: ref} = state) do
     # Log and possibly restart the task...
+    Logger.error(
+      "Task Failed: for quesiton: #{state.previous_question.id}, Correct_Ans: #{state.previous_question.correct_answer_text}"
+    )
+
     {:noreply, %{state | ref: nil}}
   end
 
