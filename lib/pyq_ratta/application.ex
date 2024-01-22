@@ -11,6 +11,7 @@ defmodule PyqRatta.Application do
         PyqRatta.Repo,
         {DNSCluster, query: Application.get_env(:pyq_ratta, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: PyqRatta.PubSub},
+        {Cachex, name: :users},
         PyqRatta.Telegram.Commands,
         # {PartitionSupervisor,
         # child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisor},

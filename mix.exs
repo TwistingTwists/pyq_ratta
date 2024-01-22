@@ -4,7 +4,7 @@ defmodule PyqRatta.MixProject do
   def project do
     [
       app: :pyq_ratta,
-      version: "0.1.2",
+      version: "0.1.3",
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -29,6 +29,10 @@ defmodule PyqRatta.MixProject do
 
   defp deps do
     [
+      # caching
+
+      {:cachex, "~> 3.6"},
+
       # all ash
 
       {:ash_admin, "~> 0.10"},
@@ -81,8 +85,11 @@ defmodule PyqRatta.MixProject do
 
       # {:ex_machina, "~> 2.7"},
       {:faker, "~> 0.17"},
-      {:mock, "~> 0.3.8", only: :test}
+      {:mock, "~> 0.3.8", only: :test},
       # {:stream_data, "~> 0.6", only: :test}
+
+      # code quality
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
