@@ -20,21 +20,34 @@ Features:
     [ ] Quiz.create_for_user(actor: user, quiz_id: 2, type: :wrong_only)
     [ ] type: [:wrong_only, :new , :difficult_only]
 
+#### Telegram:
+[ ] what is chatinstance?
+[ ] Some telemetry for saving all incoming / outgoing messages from telegram - to clickhouse?
+    [ ] databse ?
+    [ ] aim? - discoverability
+[ ] User responses are buffered via Throttle Adapter.
+    [] Buffer out all the responses of the user to a single process which then flushes them to the tg client to proper rate limits.
+
+
+#### Running Quiz:
+
+#### Database:
+[ ] User can answer a question from a quiz - and response is recorded in QuizPractice.Response
+    [x] QuizPractice.Response.save(question, quiz, user, "A")
+
+
 
 2024-01-19
 
 ## v0.1.3
 
 #### Telegram:
-[ ] what is chatinstance?
-[ ] some telemetry for saving all incoming / outgoing messages from telegram
 [x] Button and keyboard in telegram -- how to respond
-
+[x] Answer to previous question is sent before the next question is sent.
 
 #### Running Quiz:
 [x] Shutdown the server for the paid user_id, quiz_id
-[] Buffer out all the responses of the user to a single process which then flushes them to the tg client to proper rate limits.
-[] Shutdown the UserAttemptServer and callback terminate function in it. 
+[x] Shutdown the UserAttemptServer and callback terminate function in it.
 
 #### Database:
 [ ] User can answer a question from a quiz - and response is recorded in QuizPractice.Response
