@@ -25,6 +25,7 @@ Features:
 [ ] Some telemetry for saving all incoming / outgoing messages from telegram - to clickhouse?
     [ ] databse ?
     [ ] aim? - discoverability
+    [ ] see reference implementation - https://github.com/rockneurotiko/ex_gram/issues/106 + https://github.com/rockneurotiko/ex_gram/pull/97
 [ ] User responses are buffered via Throttle Adapter.
     [] Buffer out all the responses of the user to a single process which then flushes them to the tg client to proper rate limits.
 
