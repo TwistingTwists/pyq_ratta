@@ -6,6 +6,8 @@ alias PyqRatta.QuizPractice.Response
 alias PyqRatta.Workers.UserAttemptServer, as: UAS
 alias PyqRatta.Factory
 
+alias DynamicSupervisor, as: DS
+DS.which_children(PyqRatta.Telegram.Commands.DynamicSupervisor)
 # %{type: type, question_text: question_text} =
 #   question_params =
 #   [

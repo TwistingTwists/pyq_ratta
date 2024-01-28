@@ -1,10 +1,12 @@
 defmodule PyqRatta.MixProject do
   use Mix.Project
 
+  @version "0.1.3"
+
   def project do
     [
       app: :pyq_ratta,
-      version: "0.1.3",
+      version: @version,
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -89,7 +91,11 @@ defmodule PyqRatta.MixProject do
       # {:stream_data, "~> 0.6", only: :test}
 
       # code quality
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+
+      # gitops - automatic changelog
+      {:git_ops, "~> 2.6.0", only: [:dev]}
+
     ]
   end
 

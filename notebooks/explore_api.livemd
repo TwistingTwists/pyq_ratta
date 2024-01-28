@@ -2,6 +2,13 @@
 
 # Testing API
 
+```elixir
+Mix.install([
+  {:kino_db, "~> 0.2.5"},
+  {:postgrex, "~> 0.17.4"}
+])
+```
+
 ## Section
 
 ```elixir
@@ -27,72 +34,339 @@ Node.ping(nodename)
 :pong
 ```
 
+<!-- livebook:{"attrs":"eyJkYXRhYmFzZSI6InB5cV9yYXR0YV9kZXYiLCJob3N0bmFtZSI6ImxvY2FsaG9zdCIsInBhc3N3b3JkX3NlY3JldCI6IlBPU1RHUkVTX1BBU1NXT1JEIiwicG9ydCI6NTQzMiwidHlwZSI6InBvc3RncmVzIiwidXNlX2lwdjYiOmZhbHNlLCJ1c2Vfc3NsIjpmYWxzZSwidXNlcm5hbWUiOiJwb3N0Z3JlcyIsInZhcmlhYmxlIjoiY29ubiJ9","chunks":null,"kind":"Elixir.KinoDB.ConnectionCell","livebook_object":"smart_cell"} -->
+
+```elixir
+opts = [
+  hostname: "localhost",
+  port: 5432,
+  username: "postgres",
+  password: System.fetch_env!("LB_POSTGRES_PASSWORD"),
+  database: "pyq_ratta_dev"
+]
+
+{:ok, conn} = Kino.start_child({Postgrex, opts})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok, #PID<0.1649.0>}
+```
+
+<!-- livebook:{"attrs":"eyJjYWNoZV9xdWVyeSI6dHJ1ZSwiY29ubmVjdGlvbiI6eyJ0eXBlIjoicG9zdGdyZXMiLCJ2YXJpYWJsZSI6ImNvbm4ifSwiZGF0YV9mcmFtZV9hbGlhcyI6IkVsaXhpci5FeHBsb3Jlci5EYXRhRnJhbWUiLCJxdWVyeSI6InNlbGVjdCAqIGZyb20gcXVlc3Rpb24gbGltaXQgMTAwXG4tLSBzZWxlY3QgKiBmcm9tIHF1aXogXG4tLSAgIHdoZXJlIHF1aXouaWQgPSBDQVNUKDIgQVMgQklHSU5UKSBcbi0tICAgbGltaXQgMTAwIiwicmVzdWx0X3ZhcmlhYmxlIjoicmVzdWx0IiwidGltZW91dCI6bnVsbH0","chunks":null,"kind":"Elixir.KinoDB.SQLCell","livebook_object":"smart_cell"} -->
+
+```elixir
+result =
+  Postgrex.query!(
+    conn,
+    """
+    select * from question limit 100
+    -- select * from quiz 
+    --   where quiz.id = CAST(2 AS BIGINT) 
+    --   limit 100
+    """,
+    []
+  )
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+%Postgrex.Result{command: :select, columns: ["id", "question_text", "question_image", "type", "correct_answer_text", "correct_answer_image", "explanation_text", "explanation_image", "short_description", "long_description", "year", "tags", "created_at", "updated_at", "quiz_id"], rows: [[6, "This is question 001", nil, nil, "A", nil, nil, nil, nil, nil, nil, [], ~N[2024-01-06 13:39:09.879882], ~N[2024-01-06 13:39:09.879882], nil], [7, "This is question 002", nil, nil, "A", nil, nil, nil, nil, nil, nil, [], ~N[2024-01-06 13:40:14.517620], ~N[2024-01-06 13:40:14.517620], nil]], num_rows: 2, connection_id: 57915, messages: []}
+```
+
+<!-- livebook:{"attrs":"eyJjYWNoZV9xdWVyeSI6dHJ1ZSwiY29ubmVjdGlvbiI6eyJ0eXBlIjoicG9zdGdyZXMiLCJ2YXJpYWJsZSI6ImNvbm4ifSwiZGF0YV9mcmFtZV9hbGlhcyI6IkVsaXhpci5FeHBsb3Jlci5EYXRhRnJhbWUiLCJxdWVyeSI6InNlbGVjdCAqIGZyb20gcXVpeiAiLCJyZXN1bHRfdmFyaWFibGUiOiJyZXN1bHQyIiwidGltZW91dCI6bnVsbH0","chunks":null,"kind":"Elixir.KinoDB.SQLCell","livebook_object":"smart_cell"} -->
+
+```elixir
+result2 = Postgrex.query!(conn, "select * from quiz ", [])
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+%Postgrex.Result{command: :select, columns: ["id", "short_description", "long_description", "year", "tags", "created_at", "updated_at"], rows: [[1, nil, nil, 2023, [], ~N[2024-01-06 10:59:57.664398], ~N[2024-01-06 10:59:57.664398]], [2, nil, nil, 2024, [], ~N[2024-01-06 11:07:17.024244], ~N[2024-01-06 11:07:17.024244]]], num_rows: 2, connection_id: 57915, messages: []}
+```
+
+```elixir
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+# :erpc.call(nodename, fn ->
+#   alias PyqRatta, as: PR
+#   # PR.Databank.Question.create(%{question_text: "This is question 001 ", correct_answer_text: "A"})
+#   args = [%{question_text: "This is question 002 ", correct_answer_text: "A"}]
+
+#   # PR.Databank.bulk_create(args, PR.Databank.Question,:create)
+#   PR.Databank.Question.create(hd(args))
+# end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+# :erpc.call(nodename, fn ->
+#   alias PyqRatta, as: PR
+#   attrs = %{
+#     year: 2023
+#   }
+#   PR.Databank.Quiz.create(attrs)
+
+# end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+# :erpc.call(nodename, fn ->
+#   alias PyqRatta, as: PR
+#   attrs = %{
+#     year: 2024
+#   }
+#   PR.Databank.Quiz.create(attrs)
+
+# end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+# :erpc.call(nodename, fn ->
+#   alias PyqRatta, as: PR
+#   attrs = %{
+#     year: 2024
+#   }
+#   # quiz = PR.Databank.Quiz.read!(2)
+
+#   # PR.Databank.Quiz.__info__(:functions) |> Enum.filter(fn 
+#   # { :add_question_ids, v} -> true 
+#   # _ -> false
+#   # end)
+#   # Module.get_definition(PR.Databank.Quiz, { :add_question_ids,3 })
+# end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+# :erpc.call(nodename, fn ->
+#   alias PyqRatta, as: PR
+#   attrs = %{
+#     year: 2024
+#   }
+
+#   # quiz = PR.Databank.Quiz.read!(2)
+#    PR.Databank.Question.all()
+#   # quiz = PR.Databank.Question.read!(1)
+
+#   # PR.Databank.Quiz.add_question_ids(quiz,   [1,2])
+#   # PR.Databank.Quiz.add_question_ids(quiz, %{question_ids: [1,2]})
+# end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+# :erpc.call(nodename, fn -> 
+#   alias PyqRatta, as: PR
+
+#   PR.Databank.Question.read(6)
+# end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
 ```elixir
 :erpc.call(nodename, fn ->
   alias PyqRatta, as: PR
 
-  PR.Quiz.Question.create(%{question_text: "This is question", correct_answer_text: "A"})
+  attrs = %{
+    year: 2024
+  }
+
+  quiz =
+    PR.Databank.Quiz.read!(2)
+    |> IO.inspect()
+
+  PR.Databank.Quiz.add_question_ids(quiz, [6, 7])
+  # PR.Databank.Quiz.add_question_ids(quiz, %{question_ids: [1,2]})
 end)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
+warning: variable "attrs" is unused (if the variable is not meant to be used, prefix it with an underscore)
+  notebooks/explore_api.livemd#cell:ay3patz3drgrs6ob:3
 
-17:46:40.062 [debug] QUERY OK db=11.6ms idle=1411.4ms
+
+20:00:52.893 [debug] QUERY OK source="quiz" db=2.3ms queue=0.3ms idle=1532.0ms
+SELECT q0."id", q0."short_description", q0."long_description", q0."year", q0."tags", q0."created_at", q0."updated_at" FROM "quiz" AS q0 WHERE (q0."id"::bigint = $1::bigint) [2]
+↳ anonymous fn/3 in AshPostgres.DataLayer.run_query/2, at: lib/data_layer.ex:689
+#PyqRatta.Databank.Quiz<
+  questions: #Ash.NotLoaded<:relationship>,
+  __meta__: #Ecto.Schema.Metadata<:loaded, "quiz">,
+  id: 2,
+  short_description: nil,
+  long_description: nil,
+  year: 2024,
+  tags: [],
+  created_at: ~U[2024-01-06 11:07:17.024244Z],
+  updated_at: ~U[2024-01-06 11:07:17.024244Z],
+  aggregates: %{},
+  calculations: %{},
+  ...
+>
+Questions IDS are these: [6, 7]
+
+20:00:52.894 [debug] QUERY OK db=0.2ms idle=1535.6ms
 begin []
-↳ anonymous fn/3 in Ash.Changeset.with_hooks/3, at: lib/ash/changeset/changeset.ex:2140
+↳ anonymous fn/3 in Ash.Changeset.with_hooks/3, at: lib/ash/changeset/changeset.ex:2147
 
-17:46:40.106 [debug] QUERY OK source="question" db=8.8ms
-INSERT INTO "question" ("correct_answer_text","created_at","question_text","tags","updated_at") VALUES ($1,$2,$3,$4,$5) RETURNING "updated_at","created_at","tags","year","long_description","short_description","explanation_image","explanation_text","correct_answer_image","correct_answer_text","type","question_image","question_text","id" ["A", ~U[2024-01-05 12:16:39.992746Z], "This is question", [], ~U[2024-01-05 12:16:39.992746Z]]
-↳ AshPostgres.DataLayer.bulk_create/3, at: lib/data_layer.ex:1404
+20:00:52.897 [debug] QUERY OK source="question" db=1.8ms
+SELECT q0."id", q0."question_text", q0."question_image", q0."type", q0."correct_answer_text", q0."correct_answer_image", q0."explanation_text", q0."explanation_image", q0."short_description", q0."long_description", q0."year", q0."tags", q0."created_at", q0."updated_at", q0."quiz_id" FROM "question" AS q0 WHERE (q0."id"::bigint = $1::bigint) [6]
+↳ anonymous fn/3 in AshPostgres.DataLayer.run_query/2, at: lib/data_layer.ex:689
 
-17:46:40.125 [debug] QUERY OK db=2.6ms
-commit []
-↳ anonymous fn/3 in Ash.Changeset.with_hooks/3, at: lib/ash/changeset/changeset.ex:2140
+20:00:52.899 [debug] QUERY OK source="question" db=1.6ms
+SELECT q0."id", q0."question_text", q0."question_image", q0."type", q0."correct_answer_text", q0."correct_answer_image", q0."explanation_text", q0."explanation_image", q0."short_description", q0."long_description", q0."year", q0."tags", q0."created_at", q0."updated_at", q0."quiz_id" FROM "question" AS q0 WHERE (q0."id"::bigint = $1::bigint) [7]
+↳ anonymous fn/3 in AshPostgres.DataLayer.run_query/2, at: lib/data_layer.ex:689
+Final CS: #Ash.Changeset<
+  api: PyqRatta.Databank,
+  action_type: :update,
+  action: :add_question_ids,
+  attributes: %{},
+  relationships: %{
+    questions: [
+      {[
+         #PyqRatta.Databank.Question<
+           quiz: #Ash.NotLoaded<:relationship>,
+           __meta__: #Ecto.Schema.Metadata<:loaded, "question">,
+           id: 6,
+           question_text: "This is question 001",
+           question_image: nil,
+           type: nil,
+           correct_answer_text: "A",
+           correct_answer_image: nil,
+           explanation_text: nil,
+           explanation_image: nil,
+           short_description: nil,
+           long_description: nil,
+           year: nil,
+           tags: [],
+           created_at: ~U[2024-01-06 13:39:09.879882Z],
+           updated_at: ~U[2024-01-06 13:39:09.879882Z],
+           quiz_id: 2,
+           aggregates: %{},
+           calculations: %{},
+           ...
+         >,
+         #PyqRatta.Databank.Question<
+           quiz: #Ash.NotLoaded<:relationship>,
+           __meta__: #Ecto.Schema.Metadata<:loaded, "question">,
+           id: 7,
+           question_text: "This is question 002",
+           question_image: nil,
+           type: nil,
+           correct_answer_text: "A",
+           correct_answer_image: nil,
+           explanation_text: nil,
+           explanation_image: nil,
+           short_description: nil,
+           long_description: nil,
+           year: nil,
+           tags: [],
+           created_at: ~U[2024-01-06 13:40:14.517620Z],
+           updated_at: ~U[2024-01-06 13:40:14.517620Z],
+           quiz_id: 2,
+           aggregates: %{},
+           calculations: %{},
+           ...
+         >
+       ],
+       [
+         ignore?: false,
+         on_missing: :destroy,
+         on_match: :update,
+         on_lookup: :ignore,
+         on_no_match: :create,
+         eager_validate_with: false,
+         authorize?: true,
+         type: :direct_control,
+         meta: [inputs_was_list?: true]
+       ]}
+    ]
+  },
+  arguments: %{question_ids: [6, 7]},
+  errors: [],
+  data: #PyqRatta.Databank.Quiz<
+    questions: #Ash.NotLoaded<:relationship>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "quiz">,
+    id: 2,
+    short_description: nil,
+    long_description: nil,
+    year: 2024,
+    tags: [],
+    created_at: ~U[2024-01-06 11:07:17.024244Z],
+    updated_at: ~U[2024-01-06 11:07:17.024244Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  context: %{actor: nil, authorize?: false},
+  valid?: true
+>
+
+20:00:52.910 [debug] QUERY OK db=0.6ms
+rollback []
+↳ anonymous fn/3 in Ash.Changeset.with_hooks/3, at: lib/ash/changeset/changeset.ex:2147
 
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-{:ok,
- %{
-   __lateral_join_source__: nil,
-   __meta__: %{
-     __struct__: Ecto.Schema.Metadata,
-     context: nil,
-     prefix: nil,
-     schema: PyqRatta.Quiz.Question,
-     source: "question",
-     state: :loaded
-   },
-   __metadata__: %{},
-   __order__: nil,
-   __struct__: PyqRatta.Quiz.Question,
-   aggregates: %{},
-   calculations: %{},
-   correct_answer_image: nil,
-   correct_answer_text: "A",
-   created_at: ~U[2024-01-05 12:16:39.992746Z],
-   explanation_image: nil,
-   explanation_text: nil,
-   id: 2,
-   long_description: nil,
-   question_image: nil,
-   question_text: "This is question",
-   short_description: nil,
-   tags: [],
-   type: nil,
-   updated_at: ~U[2024-01-05 12:16:39.992746Z],
-   year: nil
- }}
+
+10:49:46.391 [error] Postgrex.Protocol (#PID<0.1651.0>) disconnected: ** (Postgrex.Error) FATAL 57P01 (admin_shutdown) terminating connection due to unexpected postmaster exit
+
+10:49:46.393 [error] Postgrex.Protocol #PID<0.1651.0> could not cancel backend: tcp connect: connection refused - :econnrefused
+
+10:49:46.397 [error] Postgrex.Protocol (#PID<0.1651.0>) failed to connect: ** (DBConnection.ConnectionError) tcp connect (localhost:5432): connection refused - :econnrefused
+
+10:49:48.224 [error] Postgrex.Protocol (#PID<0.1651.0>) failed to connect: ** (DBConnection.ConnectionError) tcp connect (localhost:5432): connection refused - :econnrefused
+
+10:49:50.625 [error] Postgrex.Protocol (#PID<0.1651.0>) failed to connect: ** (DBConnection.ConnectionError) tcp connect (localhost:5432): connection refused - :econnrefused
+
 ```
 
-```elixir
-:erpc.call(nodename, fn ->
-  alias PyqRatta, as: PR
-
-  PR.Quiz.Question.create(%{question_text: "This is question", correct_answer_text: "A"})
-end)
-```
+<!-- livebook:{"offset":11002,"stamp":{"token":"XCP.CF43POi0X5jwvZHiNuLjAMgsfhwiWVwapZdIreeAMXc6BPrHT4ZFVLUvBlsU5o-sZKkORktprtY6g0OMlr78ZcVLtF4jEDbhCxlGz9ttfGJko0C-t11CJUqQFDw_","version":2}} -->
