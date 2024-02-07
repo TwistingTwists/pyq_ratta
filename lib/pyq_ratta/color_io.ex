@@ -55,4 +55,16 @@ defmodule Helpers.ColorIO do
     IO.inspect(data, syntax_colors: colors, pretty: true, limit: :infinity)
     data
   end
+
+  # defmacro debug(opts, color \\ :purple,  label \\ "") do
+  #   %{module: module, function: fun, file: file, line: line} = __CALLER__
+
+  #   quote bind_quoted: [opts: opts, color: color, label: label] do
+  # prnt(opts, color, label,)
+  # IO.inspect("==========#{unquote(module)}:#{inspect(unquote(fun))}==========\n")
+  # IO.inspect(opts, label: label)
+  # IO.inspect("==========#{unquote(file)}:#{unquote(line)}==========\n")
+  #     opts
+  #   end
+  # end
 end

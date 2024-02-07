@@ -2,6 +2,8 @@ alias PyqRatta.Databank.Quiz
 alias PyqRatta.Databank.Question
 alias PyqRatta.Databank.QuizQuestion
 alias PyqRatta.Accounts
+alias PyqRatta.Accounts.User
+alias PyqRatta.QuizPractice.Response, as: UserResponse
 alias PyqRatta.QuizPractice.Response
 alias PyqRatta.Workers.UserAttemptServer, as: UAS
 alias PyqRatta.Factory
@@ -80,6 +82,19 @@ DS.which_children(PyqRatta.Telegram.Commands.DynamicSupervisor)
 # change manage_relationship(:question_ids, :questions, type: :direct_control)
 me_tg_id = 417_851_214
 
+quiz_id = "55e8278b-3646-42e4-8ccf-1374d42f2607"
+question_id = "846b9758-67b2-4bf1-8a16-3e574686904c"
+user_response = "b"
+# UserResponse.save(me_tg_id,   quiz_id, question_id, %{attempted_answer: user_response})
+
+UserResponse
+|> Ash.Changeset.new()
+|> Ash.Changeset.set_argument(:user_id, me_tg_id)
+|> Ash.Changeset.set_argument(:question_id, question_id)
+|> Ash.Changeset.set_argument(:quiz_id, quiz_id)
+
+# |> Ash.Changeset.for_create(:save)
+
 # Response.of_user_tgid(me_tg_id)
 #   |> IO.inspect(label: "Reponse for the telegram user")
 
@@ -100,3 +115,5 @@ Response.of_user_tgid(me_tg_id)
 # end
 # opts = [user_id: " as", quiz_id: "asdf", a: "asdfff"]
 # struct(H.State, Map.new(opts))
+
+Logger.configure(level: :warning)
