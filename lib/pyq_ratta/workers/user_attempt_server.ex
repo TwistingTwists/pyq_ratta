@@ -80,7 +80,8 @@ defmodule PyqRatta.Workers.UserAttemptServer do
     task =
       Task.Supervisor.async_nolink(PyqRatta.Telegram.TaskSupervisor, fn ->
         QuizChecker.handle_cast(
-          {:check_and_reply, state.previous_question, user_response, state.user_tg_id},
+          {:check_and_reply, state.previous_question, state.quiz, user_response,
+           state.user_tg_id},
           %{}
         )
       end)

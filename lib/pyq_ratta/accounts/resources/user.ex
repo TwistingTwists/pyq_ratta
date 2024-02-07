@@ -43,6 +43,19 @@ defmodule PyqRatta.Accounts.User do
   actions do
     defaults [:read, :update]
 
+    read :read_by_tgid do
+      argument(:telegram_id, :decimal, allow_nil?: false)
+
+      argument :check_cache, :boolean do
+        default(true)
+      end
+
+      get? true
+      filter(expr(telegram_id == ^arg(:telegram_id)))
+
+      prepare {PyqRatta.Accounts.Preparations.CheckCache, arg: arg(:telegram_id)}
+    end
+
     create :register_with_telegram do
       argument :telegram_id, :decimal, allow_nil?: false
       upsert? true
@@ -54,17 +67,12 @@ defmodule PyqRatta.Accounts.User do
         Ash.Changeset.change_attribute(cs, :telegram_id, tg_id)
       end
     end
-
-    # read :get_by_tgid do
-    #   get_by :telegram_id
-    # end
   end
 
   code_interface do
     define_for PyqRatta.Accounts
 
-    # define :get_by_tgid
-    define :by_tgid, action: :read, get_by: [:telegram_id]
+    define(:by_tgid, action: :read_by_tgid, args: [:telegram_id])
 
     define :register_with_telegram, args: [:telegram_id]
   end

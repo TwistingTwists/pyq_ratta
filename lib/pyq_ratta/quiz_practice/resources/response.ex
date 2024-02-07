@@ -1,6 +1,9 @@
 defmodule PyqRatta.QuizPractice.Response do
   require Logger
 
+  alias PyqRatta.Databank.Changes.AddArgToRelationship
+  alias PyqRatta.QuizPractice.Changesets.UserTgIdtoUserId
+
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer
 
@@ -38,7 +41,21 @@ defmodule PyqRatta.QuizPractice.Response do
     end
 
     create :save do
-      change relate_actor(:user)
+      argument :user_tg_id, :decimal do
+        allow_nil?(false)
+      end
+
+      argument :quiz_id, :uuid do
+        allow_nil?(false)
+      end
+
+      argument :question_id, :uuid do
+        allow_nil?(false)
+      end
+
+      change(set_attribute(:quiz_id, arg(:quiz_id)))
+      change(set_attribute(:question_id, arg(:question_id)))
+      change({UserTgIdtoUserId, arg: :user_tg_id, attr: :user_id})
     end
 
     #     #       read :next do

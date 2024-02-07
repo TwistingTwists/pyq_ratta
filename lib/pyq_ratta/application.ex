@@ -9,9 +9,9 @@ defmodule PyqRatta.Application do
       [
         PyqRattaWeb.Telemetry,
         PyqRatta.Repo,
+        {Cachex, name: :users_cache},
         {DNSCluster, query: Application.get_env(:pyq_ratta, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: PyqRatta.PubSub},
-        {Cachex, name: :users},
         PyqRatta.Telegram.Commands,
         # {PartitionSupervisor,
         # child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisor},
@@ -28,6 +28,8 @@ defmodule PyqRatta.Application do
     opts = [strategy: :one_for_one, name: PyqRatta.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
+  defp users_cache(), do: :users_cache
 
   if Mix.env() == :test do
     def add_bots do
