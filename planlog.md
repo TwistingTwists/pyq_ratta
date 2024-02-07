@@ -5,7 +5,7 @@
 Features:
 [ ] Analytics on 'wrong' questions and reminders
 [ ] Caching for
-    [ ] Current User
+    [x] Current User
     [ ] File being sent to the user - use file_id of telegram, not {:file, "local/file/path"}
 [ ] UI to monitor realtime progress of each user
 [ ] Make learning sharable.
