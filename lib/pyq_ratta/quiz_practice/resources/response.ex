@@ -13,7 +13,6 @@ defmodule PyqRatta.QuizPractice.Response do
     define :save, action: :save, args: [:user_tg_id, :quiz_id, :question_id]
     define :of_user_tgid, args: [:telegram_id]
     define :of_user_userid
-
   end
 
   actions do

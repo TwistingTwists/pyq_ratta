@@ -5,10 +5,13 @@ defmodule PyqRatta.Telegram.Quizbot do
   alias PyqRatta.Telegram.Commands
   alias PyqRatta.Telegram.MessageFormatter, as: MF
   alias PyqRatta.Workers.UserAttemptServer, as: UAS
+  alias PyqRatta.Telegram.ChannelCommands.NewPost
+  alias __MODULE__
 
   use ExGram.Bot, name: @bot
 
   require MyInspect
+  import Helpers.ColorIO
 
   middleware(Telegram.Middlewares.RegisterUser)
 
@@ -47,6 +50,18 @@ defmodule PyqRatta.Telegram.Quizbot do
   def handle({:text, _any, msg}, context) do
     {msg, opts} = MF.welcome_message()
     answer(context, msg, opts)
+  end
+
+  # when link is posted in the channel
+  def handle(
+        {:update,
+         %ExGram.Model.Update{
+           channel_post: %{link_preview_options: url, chat: %{id: channel_id, type: "channel"}}
+         }},
+        context
+      ) do
+    NewPost.process_link(url)
+    |> NewPost.maybe_send_reply(channel_id)
   end
 
   ######## any other command ########
