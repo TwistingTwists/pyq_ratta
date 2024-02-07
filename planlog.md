@@ -1,18 +1,34 @@
 
+### v0.3
 
-### v0.2
+[ ] Process the link for daily MCQ
+    [ ] take screenshot of all files
+    [ ] receive json from python
+    [ ] Put quiz / question in db
+    [ ] generate telegram link and reply to the post
 
-Features:
-[ ] Analytics on 'wrong' questions and reminders
-[ ] Caching for
-    [x] Current User
-    [ ] File being sent to the user - use file_id of telegram, not {:file, "local/file/path"}
+[ ] Save the response in database
+    [ ]
+
 [ ] UI to monitor realtime progress of each user
 [ ] Make learning sharable.
     [ ] post in group - leaderboard
     [ ] LiveLink to show leaderboard
 
-2024-02-20
+[ ] Analytics
+    [ ] on 'wrong' questions and reminders
+
+[ ] Performance Improvements
+    [ ] File being sent to the user - use file_id of telegram, not {:file, "local/file/path"}
+    [ ]
+
+
+### v0.2
+
+Features:
+[ ] Caching for
+    [x] Current User
+
 
 ### v0.1.4
 
