@@ -10,14 +10,10 @@ defmodule PyqRatta.QuizPractice.Response do
   code_interface do
     define_for PyqRatta.QuizPractice
 
-    define :save, action: :save
+    define :save, action: :save, args: [:user_tg_id, :quiz_id, :question_id]
     define :of_user_tgid, args: [:telegram_id]
     define :of_user_userid
-    #       define :for_user, action: :for_user
-    #       define :get_by, action: :get_by
-    #       define :lookahead, action: :lookahead
-    #       define :next, action: :next
-    #       define :oldest_untried_card, action: :oldest_untried_card
+
   end
 
   actions do
@@ -42,20 +38,20 @@ defmodule PyqRatta.QuizPractice.Response do
 
     create :save do
       argument :user_tg_id, :decimal do
-        allow_nil?(false)
+        allow_nil? false
       end
 
       argument :quiz_id, :uuid do
-        allow_nil?(false)
+        allow_nil? false
       end
 
       argument :question_id, :uuid do
-        allow_nil?(false)
+        allow_nil? false
       end
 
-      change(set_attribute(:quiz_id, arg(:quiz_id)))
-      change(set_attribute(:question_id, arg(:question_id)))
-      change({UserTgIdtoUserId, arg: :user_tg_id, attr: :user_id})
+      change set_attribute(:quiz_id, arg(:quiz_id))
+      change set_attribute(:question_id, arg(:question_id))
+      change {UserTgIdtoUserId, arg: :user_tg_id, attr: :user_id}
     end
 
     #     #       read :next do
