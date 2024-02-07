@@ -30,7 +30,7 @@ def emulate_chromium(p,show_browser=False):
 def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child_selector="li.wpProQuiz_listItem", output_folder="screenshots"):
     print(f"{url} \n")
     with sync_playwright() as p:
-        context = emulate_iphone(p,show_browser=True)
+        context = emulate_iphone(p,show_browser=False)
         # context = emulate_chromium(p)
 
         page = context.new_page()
