@@ -94,8 +94,10 @@ defmodule PyqRatta.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
 
       # gitops - automatic changelog
-      {:git_ops, "~> 2.6.0", only: [:dev]}
+      {:git_ops, "~> 2.6.0", only: [:dev]},
 
+      # system cmd
+      {:muontrap, "~> 1.0"}
     ]
   end
 

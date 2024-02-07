@@ -19,11 +19,14 @@ defmodule PyqRatta.Accounts.Preparations.CheckCache do
       # quote do unquote(query.filter) end |> purple("Query filetr")
       case Cachex.get(users_cache(), cache_key(user_tg_id)) do
         {:ok, nil} ->
-          {:ok, user} = User.by_tgid(user_tg_id, %{check_cache: false})
-          |> cache_now()
+          {:ok, user} =
+            User.by_tgid(user_tg_id, %{check_cache: false})
+            |> cache_now()
+
           yellow("#{user.telegram_id}  -- from db")
           Ash.Query.set_result(query, {:ok, [user]})
-          # {:ok, user}
+
+        # {:ok, user}
 
         {:ok, user} ->
           yellow("#{user.telegram_id}  -- from cache")
@@ -38,7 +41,7 @@ defmodule PyqRatta.Accounts.Preparations.CheckCache do
   end
 
   defp cache_now({:ok, user}) do
-    Cachex.put(users_cache(), cache_key(user.telegram_id) , user)
+    Cachex.put(users_cache(), cache_key(user.telegram_id), user)
     {:ok, user}
   end
 
