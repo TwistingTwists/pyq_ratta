@@ -114,10 +114,11 @@ defmodule PyqRatta.Workers.UserAttemptServer do
         ExGram.send_message(state.user_tg_id, msg, opts)
 
         Process.sleep(500)
-        |> green("Shutting down the genserver")
 
         # {:stop, {:shutdown, :quiz_finished}, new_state}
         {:stop, :normal, new_state}
+        |> green("Shutting down the genserver")
+
 
       {question, new_state} ->
         # schedule_next_question()
