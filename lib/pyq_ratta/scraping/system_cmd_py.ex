@@ -1,4 +1,9 @@
 defmodule PyqRatta.SystemCmd do
+  @moduledoc """
+    see this if you want to capture some data from python side.
+
+    https://github.com/saleyn/erlexec/
+    """
   import Helpers.ColorIO
 
   def parse_url(url) do
