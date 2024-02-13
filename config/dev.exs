@@ -16,10 +16,12 @@ config :pyq_ratta, PyqRatta.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
+port = System.get_env("PHX_PORT", "4005") |> String.to_integer()
+
 config :pyq_ratta, PyqRattaWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {127, 0, 0, 1}, port: port],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
