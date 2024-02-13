@@ -97,7 +97,11 @@ defmodule PyqRatta.MixProject do
       {:git_ops, "~> 2.6.0", only: [:dev]},
 
       # system cmd
-      {:muontrap, "~> 1.0"}
+      {:muontrap, "~> 1.0"},
+
+      # parser combinators
+      {:nimble_parsec, "~> 1.4.0"},
+      {:pegasus, "~> 0.2.4"}
     ]
   end
 

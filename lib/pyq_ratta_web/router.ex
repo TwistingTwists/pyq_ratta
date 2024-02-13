@@ -22,9 +22,10 @@ defmodule PyqRattaWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", PyqRattaWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", PyqRattaWeb do
+    pipe_through :api
+    post "/scraped", PythonPlaywrightController, :from_python
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:pyq_ratta, :dev_routes) do

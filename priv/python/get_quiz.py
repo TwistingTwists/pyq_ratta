@@ -3,6 +3,8 @@ from playwright.sync_api import sync_playwright
 import re
 import fire
 from urllib.parse import urlparse
+from api import post
+from collections import defaultdict
 
 def write_html_to_file(html_content, output_file_path):
     with open(output_file_path, 'w', encoding='utf-8') as file:
@@ -29,7 +31,12 @@ def emulate_chromium(p,show_browser=False):
 
 def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child_selector="li.wpProQuiz_listItem", output_folder="screenshots"):
     print(f"{url} \n")
+
+    quiz_data = []
+
     with sync_playwright() as p:
+
+
         context = emulate_iphone(p,show_browser=False)
         # context = emulate_chromium(p)
 
@@ -55,7 +62,12 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
 
         # page_title = page.locator("h1.page-title").inner_text()
         for n in range(0,num_questions):
+            question = defaultdict()
+            question["short_description"] = page_title
+
             scr_path = f"{output_folder}/{page_title}/quiz_{n + 1:03d}.png"
+            question["question_image"] = scr_path
+
             print( f"""
                 ------
                 {n}\t ### { scr_path }
@@ -64,9 +76,12 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
             q_div = page.locator(f"{parent_selector} {child_selector} ").nth(n)
             print(q_div.inner_text())
             q_div.screenshot(path=scr_path)
+            question["inner_text"]  = q_div.inner_text()
+            quiz_data.append(question)
         ################################
 
         context.close()
+        post({"quiz": quiz_data})
         return {"folder_path": f"{output_folder}/{page_title}"}
 
 if __name__ == "__main__":
