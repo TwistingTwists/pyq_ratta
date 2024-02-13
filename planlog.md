@@ -1,5 +1,32 @@
+### scrape
+
+1. get correct answer from browser
+2. send to elixir
+3. parse and create questions!
+4. post the link back to telegram
+
+
+### data
+https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ef1ebda70145fa7fd0da9e00e23b8384cc685e22
+https://eli.thegreenplace.net/2010/01/02/top-down-operator-precedence-parsing/
+https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
+https://abarker.github.io/typped/pratt_parsing_intro.html
+
+### v0.4
+
+Stream pdf to the url
+[ ] https://github.com/agentcooper/react-pdf-highlighter
+[ ] https://stephenbussey.com/2022/04/13/react-in-liveview-how-and-why.html
+[ ] Stephen bussey suggested - https://github.com/UgnisSoftware/react-spreadsheet-import
+[ ] pdf as images. meh.  https://github.com/wojtekmaj/react-pdf
+[] generate pdf -> https://pdfme.com/docs/getting-started
+
 
 ### v0.3
+
+[ ] Storage
+    [ ] postgres local with s3 backups (genserver based)
+    [ ] cloudflare account - for postgres backups and images
 
 [ ] Process the link for daily MCQ
     [ ] take screenshot of all files
@@ -7,8 +34,7 @@
     [ ] Put quiz / question in db
     [ ] generate telegram link and reply to the post
 
-[ ] Save the response in database
-    [ ]
+[x] Save the response in database
 
 [ ] UI to monitor realtime progress of each user
 [ ] Make learning sharable.
@@ -20,7 +46,6 @@
 
 [ ] Performance Improvements
     [ ] File being sent to the user - use file_id of telegram, not {:file, "local/file/path"}
-    [ ]
 
 
 ### v0.2

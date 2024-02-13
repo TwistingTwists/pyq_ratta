@@ -1,5 +1,6 @@
 defmodule PyqRattaWeb.PythonPlaywrightController do
   use PyqRattaWeb, :controller
+  import Helpers.ColorIO
 
   def from_python(conn, %{"quiz" => quiz_data}) do
     with {:ok, questions_params_array} <- parse(quiz_data),
@@ -8,9 +9,10 @@ defmodule PyqRattaWeb.PythonPlaywrightController do
       |> put_status(200)
       |> json(%{message: "received"})
     else
-      conn
-      |> put_status(404)
-      |> json(%{"message" => "Quiz could not be created"})
+      _ ->
+        conn
+        |> put_status(404)
+        |> json(%{"message" => "Quiz could not be created"})
     end
   end
 
@@ -26,5 +28,10 @@ defmodule PyqRattaWeb.PythonPlaywrightController do
         "question_image" => question_image,
         "inner_text" => inner_text
       }) do
+        inner_text
+          |> String.replace( "–", "")
+          |> String.replace("(", "")
+          |> PyqRatta.QuizParser.parse_question(clean_text)
+          |> green("parsed question")
   end
 end
