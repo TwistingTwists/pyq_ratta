@@ -5,6 +5,9 @@ import fire
 from urllib.parse import urlparse
 from api import post
 from collections import defaultdict
+import json
+import time
+from pprint import pprint
 
 def write_html_to_file(html_content, output_file_path):
     with open(output_file_path, 'w', encoding='utf-8') as file:
@@ -37,7 +40,7 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
     with sync_playwright() as p:
 
 
-        context = emulate_iphone(p,show_browser=False)
+        context = emulate_iphone(p,show_browser=True)
         # context = emulate_chromium(p)
 
         page = context.new_page()
@@ -79,8 +82,51 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
             question["inner_text"]  = q_div.inner_text()
             quiz_data.append(question)
         ################################
+        # click on the summary and find solution to each question
 
+        # wait for 5 seconds to allow popup to occur
+        page.get_by_role("button", name=re.compile("Summary", re.IGNORECASE)).click()
+        print("button summary:")
+        time.sleep(1)
+
+
+        page.get_by_role("button", name=re.compile("Finish Test", re.IGNORECASE)).click()
+        print("button finish test:")
+        time.sleep(1)
+
+
+        page.get_by_role("button", name=re.compile("View Answers", re.IGNORECASE)).click()
+        print("button view answer:")
+        time.sleep(1)
+
+        ################################
+        # assuming that #correct choices = num questions
+
+        correct_choice_selector = ".wpProQuiz_questionListItem.wpProQuiz_answerCorrect"
+        choices_with_correct_choice = page.query_selector_all(correct_choice_selector)
+
+        print(choices_with_correct_choice)
+
+        assert len(choices_with_correct_choice) == num_questions
+
+        parsed_choices = [elem.get_attribute('data-pos') for elem in choices_with_correct_choice]
+        print("\n\nParsedChoices : ")
+        print(parsed_choices)
+
+
+        new_quiz_data = []
+
+        for i, question in enumerate(quiz_data):
+            question["correct_answer"] =  parsed_choices[i]
+            new_quiz_data.append(question)
+
+        ################################
+
+        pprint(quiz_data)
         context.close()
+        with open("data.json", 'w') as f:
+            f.write(json.dumps({"quiz": new_quiz_data}))
+
         post({"quiz": quiz_data})
         return {"folder_path": f"{output_folder}/{page_title}"}
 
