@@ -21,7 +21,7 @@ defmodule PyqRatta.MixProject do
   def application do
     [
       mod: {PyqRatta.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :observer, :wx]
     ]
   end
 
@@ -73,7 +73,8 @@ defmodule PyqRatta.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:plug_cowboy, "~> 2.5"},
+      # {:plug_cowboy, "~> 2.5"},
+      {:bandit, "~> 1.2"},
 
       # telegram
 

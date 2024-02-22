@@ -30,7 +30,7 @@ config :flashy,
 # Configures the endpoint
 config :pyq_ratta, PyqRattaWeb.Endpoint,
   url: [host: "localhost"],
-  adapter: Phoenix.Endpoint.Cowboy2Adapter,
+  adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: PyqRattaWeb.ErrorHTML, json: PyqRattaWeb.ErrorJSON],
     layout: false
