@@ -1,6 +1,7 @@
 ### scrape
 
 1. get correct answer from browser
+    wpProQuiz_questionListItem wpProQuiz_answerCorrect -> read attribute-> data-post="1"
 2. send to elixir
 3. parse and create questions!
 4. post the link back to telegram
