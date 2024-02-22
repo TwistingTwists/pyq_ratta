@@ -18,7 +18,7 @@ defmodule PyqRatta.Telegram.Quizbot do
   def bot(), do: @bot
 
   def init(opts) do
-    ExGram.set_my_description!(description: "Welcome to ReminderBot", bot: opts[:bot])
+    # ExGram.set_my_description!(description: "Welcome to ReminderBot", bot: opts[:bot])
     # ExGram.set_my_name!(name: "ReminderBot", bot: opts[:bot])
     :ok
   end

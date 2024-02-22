@@ -10,6 +10,10 @@ def post(data):
     port = int(port_str) if port_str else 4005
 
     url = f"http://localhost:{port}/api/scraped"
-    response = requests.post(url, data=data)
+    # print("\n\n")
+    # print(data)
+    print("\n\n")
+
+    response = requests.post(url, json=data)
     print(response)
     return None

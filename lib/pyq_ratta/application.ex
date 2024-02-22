@@ -14,6 +14,7 @@ defmodule PyqRatta.Application do
         {Phoenix.PubSub, name: PyqRatta.PubSub},
         # PyqRatta.PyWorker,
         PyqRatta.Telegram.Commands,
+        PyqRatta.Notifications,
         # {PartitionSupervisor,
         # child_spec: Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisor},
         {Task.Supervisor, name: PyqRatta.Telegram.TaskSupervisor},

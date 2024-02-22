@@ -46,6 +46,16 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     {msg, @default_opts}
   end
 
+  def quiz_ready(opts) do
+    msg = """
+    Link to take this quiz on telegram:
+
+    #{opts[:link]}
+    """
+
+    {msg, @default_opts}
+  end
+
   def echo_message(msg) do
     {msg, []}
   end

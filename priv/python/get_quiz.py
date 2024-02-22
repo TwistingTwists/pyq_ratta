@@ -65,17 +65,19 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
 
         # page_title = page.locator("h1.page-title").inner_text()
         for n in range(0,num_questions):
-            question = defaultdict()
+            question = {}
+            # question = defaultdict()
+            question["source"] = url
             question["short_description"] = page_title
 
             scr_path = f"{output_folder}/{page_title}/quiz_{n + 1:03d}.png"
             question["question_image"] = scr_path
 
-            print( f"""
-                ------
-                {n}\t ### { scr_path }
-                ------
-                """)
+            # print( f"""
+            #     ------
+            #     {n}\t ### { scr_path }
+            #     ------
+            #     """)
             q_div = page.locator(f"{parent_selector} {child_selector} ").nth(n)
             print(q_div.inner_text())
             q_div.screenshot(path=scr_path)
@@ -105,14 +107,13 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
         correct_choice_selector = ".wpProQuiz_questionListItem.wpProQuiz_answerCorrect"
         choices_with_correct_choice = page.query_selector_all(correct_choice_selector)
 
-        print(choices_with_correct_choice)
+        # print(choices_with_correct_choice)
 
         assert len(choices_with_correct_choice) == num_questions
 
         parsed_choices = [elem.get_attribute('data-pos') for elem in choices_with_correct_choice]
         print("\n\nParsedChoices : ")
         print(parsed_choices)
-
 
         new_quiz_data = []
 
@@ -121,13 +122,15 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
             new_quiz_data.append(question)
 
         ################################
-
-        pprint(quiz_data)
+        # pprint(new_quiz_data)
+        # pprint("\n\n DONE.")
+        quiz_final_scraped = {"quiz":  new_quiz_data}
         context.close()
-        with open("data.json", 'w') as f:
-            f.write(json.dumps({"quiz": new_quiz_data}))
 
-        post({"quiz": quiz_data})
+        with open("data.json", 'w') as f:
+            f.write(json.dumps(quiz_final_scraped))
+
+        post(quiz_final_scraped)
         return {"folder_path": f"{output_folder}/{page_title}"}
 
 if __name__ == "__main__":
