@@ -1,3 +1,10 @@
+### feedback for v1.0.0
+
+1. after question done -> { review? -> yes / no } + {link to source in select correct choice + 4 / 11 = for question count}
+2. quiz start -> number of questions in quiz + this is random order of questions.
+3. after quiz end -> link to pmfias
+
+
 ### scrape
 
 1. get correct answer from browser
