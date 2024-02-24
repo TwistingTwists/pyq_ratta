@@ -86,10 +86,10 @@ defmodule PyqRatta.MixProject do
 
       # Testing
 
-      # {:ex_machina, "~> 2.7"},
+      {:ex_machina, "~> 2.7"},
       {:faker, "~> 0.17"},
       {:mock, "~> 0.3.8", only: :test},
-      # {:stream_data, "~> 0.6", only: :test}
+      {:stream_data, "~> 0.6"},
 
       # code quality
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},

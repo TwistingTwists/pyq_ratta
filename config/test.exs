@@ -13,6 +13,8 @@ config :pyq_ratta, PyqRatta.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
+config :ash, :disable_async?, true
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :pyq_ratta, PyqRattaWeb.Endpoint,
