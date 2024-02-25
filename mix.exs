@@ -102,7 +102,11 @@ defmodule PyqRatta.MixProject do
 
       # parser combinators
       {:nimble_parsec, "~> 1.4.0"},
-      {:pegasus, "~> 0.2.4"}
+      {:pegasus, "~> 0.2.4"},
+
+      # Observability and logging
+      {:logger_file_backend, "~> 0.0.13"},
+      {:medea, "~> 0.1"}
     ]
   end
 

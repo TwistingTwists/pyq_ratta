@@ -70,8 +70,15 @@ config :tailwind,
   ]
 
 # Configures Elixir's Logger
-config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
+config :logger,
+  format: {Medea.Formatter, :format},
+  backends: [
+    :console,
+    {LoggerFileBackend, :info},
+    {LoggerFileBackend, :debug},
+    {LoggerFileBackend, :error}
+  ],
+  # format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix

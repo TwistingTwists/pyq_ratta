@@ -49,3 +49,6 @@ npm-debug.log
 ./**/*/.DS_Store
 /priv/static/robots*
 a.json
+
+log/
+data_openobserve/
