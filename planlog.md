@@ -4,6 +4,10 @@
 2. quiz start -> number of questions in quiz + this is random order of questions.
 3. after quiz end -> link to pmfias
 
+#### Logging Observability
+
+[x] LoggerFileBackend 
+
 
 ### scrape
 
