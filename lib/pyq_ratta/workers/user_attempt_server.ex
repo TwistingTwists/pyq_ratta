@@ -1,5 +1,5 @@
 defmodule PyqRatta.Workers.UserAttemptServer do
-  use GenServer, restart: :transient,  shutdown: 7_000
+  use GenServer, restart: :transient, shutdown: 7_000
 
   use TypedStruct
 
@@ -62,9 +62,9 @@ defmodule PyqRatta.Workers.UserAttemptServer do
   def handle_continue(:start, %{user_tg_id: uid, quiz_id: qid} = state) do
     {:ok, user} = Accounts.User.by_tgid(uid)
 
-    {:ok, quiz} = Quiz.read_by_id(qid)    
+    {:ok, quiz} = Quiz.read_by_id(qid)
     sorted_questions = Quiz.sort_question_order(quiz)
-    
+
     state = %{state | questions: sorted_questions, quiz: quiz, user: user}
 
     {question, new_state} = do_send_next_question(state)
@@ -94,6 +94,7 @@ defmodule PyqRatta.Workers.UserAttemptServer do
           {:check_and_reply, state.previous_question, state.quiz, user_response, state.user_tg_id},
           %{}
         )
+
         # return :ok
         :ok
       end)
@@ -157,8 +158,9 @@ defmodule PyqRatta.Workers.UserAttemptServer do
 
   @impl GenServer
   def terminate(:normal, state) do
-    {msg, opts} = MF.quiz_finished()
-    {msg,state.user_tg_id} |> yellow("#{__ENV__.file}:#{__ENV__.line}")
+    link = extract_link(state)
+    {msg, opts} = MF.quiz_finished(link)
+    {msg, state.user_tg_id} |> yellow("#{__ENV__.file}:#{__ENV__.line}")
 
     # ExGram.send_message(state.user_tg_id, msg, opts)
     TgSender.queue(state.user_tg_id, msg, opts)
@@ -167,9 +169,8 @@ defmodule PyqRatta.Workers.UserAttemptServer do
   end
 
   def terminate(_any, state) do
-    
     {msg, opts} = MF.quiz_crashed()
-    {msg,state.user_tg_id} |> yellow("#{__ENV__.file}:#{__ENV__.line}")
+    {msg, state.user_tg_id} |> yellow("#{__ENV__.file}:#{__ENV__.line}")
 
     # ExGram.send_message(state.user_tg_id, msg, opts)
     TgSender.queue(state.user_tg_id, msg, opts)
@@ -196,5 +197,13 @@ defmodule PyqRatta.Workers.UserAttemptServer do
 
   def via(user_id) do
     Commands.via(user_id)
+  end
+
+  defp extract_link(%{quiz: %{questions: [%{source: link} | _tail]}} = state) do
+    link
+  end
+
+  defp extract_link(_state) do
+    nil
   end
 end

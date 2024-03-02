@@ -1,8 +1,8 @@
 defmodule PyqRatta.Telegram.MessageFormatter do
   import ExGram.Dsl.Keyboard
   alias PyqRatta.Telegram.Quizbot
-  
-  @default_opts [parse_mode: "Markdown", bot: Quizbot.bot() ]
+
+  @default_opts [parse_mode: "Markdown", bot: Quizbot.bot()]
   # @default_opts [parse_mode: "MarkdownV2"]
 
   def choices_keyboard() do
@@ -44,7 +44,7 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     quiz  - #{opts[:quiz]}
     next-question - 2s
     """
-    
+
     {msg, @default_opts}
   end
 
@@ -78,9 +78,11 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     {msg, @default_opts}
   end
 
-  def quiz_finished() do
+  def quiz_finished(link \\ nil) do
     msg = """
     🎉︎ Quiz Finished. Enjoy!
+
+    #{link}
     """
 
     {msg, @default_opts}
