@@ -11,6 +11,7 @@ defmodule PyqRatta.Application do
     children =
       [
         PyqRattaWeb.Telemetry,
+        PyqRatta.Telegram.BufferedSender,
         PyqRatta.Repo,
         {Cachex, name: :users_cache},
         {DNSCluster, query: Application.get_env(:pyq_ratta, :dns_cluster_query) || :ignore},

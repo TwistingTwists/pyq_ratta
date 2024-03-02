@@ -53,7 +53,7 @@ defmodule PyqRatta.Accounts.User do
       get? true
       filter(expr(telegram_id == ^arg(:telegram_id)))
 
-      prepare {PyqRatta.Accounts.Preparations.CheckCache, arg: arg(:telegram_id)}
+      # prepare {PyqRatta.Accounts.Preparations.CheckCache, arg: arg(:telegram_id)}
     end
 
     create :register_with_telegram do

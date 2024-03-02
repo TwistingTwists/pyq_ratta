@@ -10,6 +10,7 @@ defmodule PyqRatta.Workers.UserAttemptServer do
   alias PyqRatta.QuizPractice.Response
   alias PyqRatta.Telegram.Commands
   alias PyqRatta.Telegram.QuizChecker
+  alias PyqRatta.Telegram.BufferedSender, as: TgSender
 
   alias PyqRatta.Telegram.MessageFormatter, as: MF
 
@@ -50,14 +51,14 @@ defmodule PyqRatta.Workers.UserAttemptServer do
 
   ###### Callbacks ######
 
-  @impl true
+  @impl GenServer
   def init(opts) do
     # Process.flag(:trap_exit, true)
     state = struct(__MODULE__.Internal, Map.new(opts))
     {:ok, state, {:continue, :start}}
   end
 
-  @impl true
+  @impl GenServer
   def handle_continue(:start, %{user_tg_id: uid, quiz_id: qid} = state) do
     {:ok, quiz} = Quiz.read_by_id(qid)
     {:ok, user} = Accounts.User.by_tgid(uid)
@@ -70,9 +71,16 @@ defmodule PyqRatta.Workers.UserAttemptServer do
     {:noreply, new_state}
   end
 
+  @impl GenServer
   def handle_cast({:send_next_question, user_response}, state),
     do: handle_info({:send_next_question, user_response}, state)
 
+  @impl GenServer
+  def handle_call(:get_state, from, state) do
+    {:reply, state, state}
+  end
+
+  @impl GenServer
   def handle_info({:send_next_question, user_response}, state) do
     # it will check and reply in async.
     # QuizChecker.check(state.previous_question, user_response, state.user_tg_id)
@@ -91,10 +99,6 @@ defmodule PyqRatta.Workers.UserAttemptServer do
     {:noreply, state}
   end
 
-  def handle_call(:get_state, from, state) do
-    {:reply, state, state}
-  end
-
   # The task completed successfully
   def handle_info({ref, answer}, %{ref: ref} = state) do
     # We don't care about the DOWN message now, so let's demonitor and flush it
@@ -111,10 +115,10 @@ defmodule PyqRatta.Workers.UserAttemptServer do
         # send results to the original caller
         # {:finished,new_state}
 
-        {msg, opts} = MF.quiz_finished()
-        ExGram.send_message(state.user_tg_id, msg, opts)
-
-        Process.sleep(500)
+        # {msg, opts} = MF.quiz_finished()
+        # ExGram.send_message(state.user_tg_id, msg, opts)
+        # TgSender.queue(state.user_tg_id, msg, opts)
+        # Process.sleep(500)
 
         # {:stop, {:shutdown, :quiz_finished}, new_state}
         {:stop, :normal, new_state}
@@ -148,18 +152,24 @@ defmodule PyqRatta.Workers.UserAttemptServer do
     {:noreply, state}
   end
 
-  @impl true
+  @impl GenServer
   def terminate(:normal, state) do
-    yellow("#{__ENV__.file}:#{__ENV__.line}")
     {msg, opts} = MF.quiz_finished()
-    ExGram.send_message(state.user_tg_id, msg, opts)
+    {msg,state.user_tg_id} |> yellow("#{__ENV__.file}:#{__ENV__.line}")
+
+    # ExGram.send_message(state.user_tg_id, msg, opts)
+    TgSender.queue(state.user_tg_id, msg, opts)
+
     :ok
   end
 
   def terminate(_any, state) do
-    yellow("#{__ENV__.file}:#{__ENV__.line}")
+    
     {msg, opts} = MF.quiz_crashed()
-    ExGram.send_message(state.user_tg_id, msg, opts)
+    {msg,state.user_tg_id} |> yellow("#{__ENV__.file}:#{__ENV__.line}")
+
+    # ExGram.send_message(state.user_tg_id, msg, opts)
+    TgSender.queue(state.user_tg_id, msg, opts)
     :ok
   end
 
