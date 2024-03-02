@@ -70,32 +70,56 @@ config :tailwind,
   ]
 
 # Configures Elixir's Logger
+metadata =
+  if Mix.env() == :dev do
+    [
+      :request_id,
+      # to connect traces and logs
+      :span_id,
+      :trace_id
+    ]
+  else
+    [
+      :file,
+      :line,
+      :function,
+      :module,
+      :application,
+      :httpRequest,
+      :query,
+      :request_id,
+      # to connect traces and logs
+      :span_id,
+      :trace_id
+    ]
+  end
+
 config :logger,
-  format: {Medea.Formatter, :format},
-  compile_time_purge_matching: [
-    [level_lower_than: :info]
-  ],
   backends: [
     :console,
     {LoggerFileBackend, :info},
     {LoggerFileBackend, :debug},
     {LoggerFileBackend, :error}
-  ]
+  ],
+  format: {Medea.Formatter, :format}
 
 config :logger, :info,
   path: "log/info.log",
   level: :info,
-  metadata: :all
+  metadata: metadata
 
 config :logger, :error,
   path: "log/error.log",
   level: :error,
-  metadata: :all
+  metadata: metadata
 
 config :logger, :debug,
   path: "log/debug.log",
   level: :debug,
-  metadata: :all
+  metadata: metadata
+
+config :opentelemetry, :resource, service: %{name: "pyq_ratta_#{Mix.env()}"}
+config :opentelemetry, :propagators, :otel_propagator_http_w3c
 
 # format: "$time $metadata[$level] $message\n",
 # metadata: [:request_id]

@@ -5,8 +5,8 @@ defmodule PyqRatta.Application do
   require Logger
 
   @impl true
-  def start(_type, _args) do
-    Logger.add_translator({Medea.Translator, :translate})
+  def start(_type, env) do
+    setup_metrics(env)
 
     children =
       [
@@ -28,7 +28,7 @@ defmodule PyqRatta.Application do
         # Start the unique task dependencies
         Livebook.Utils.UniqueTask
       ] ++
-        add_bots()
+        add_bots(env)
 
     opts = [strategy: :one_for_one, name: PyqRatta.Supervisor]
     Supervisor.start_link(children, opts)
@@ -36,42 +36,54 @@ defmodule PyqRatta.Application do
 
   defp users_cache(), do: :users_cache
 
-  if Mix.env() == :test do
-    def add_bots do
-      []
-    end
-  else
-    def add_bots() do
-      bots_list =
-        case Application.fetch_env(:pyq_ratta, :tg_bots) do
-          :error ->
-            []
+  # if Mix.env() == :test do
+  def add_bots(:env) do
+    []
+  end
 
-          {:ok, values} when is_list(values) ->
-            Enum.map(values, fn val ->
-              {val.module_name, [method: :polling, token: val.token]}
-            end)
+  # else
+  def add_bots(_) do
+    bots_list =
+      case Application.fetch_env(:pyq_ratta, :tg_bots) do
+        :error ->
+          []
 
-          _ ->
-            raise """
-            Need to setup at least one bot in config.exs. Example:
+        {:ok, values} when is_list(values) ->
+          Enum.map(values, fn val ->
+            {val.module_name, [method: :polling, token: val.token]}
+          end)
 
-            ```elixir
+        _ ->
+          raise """
+          Need to setup at least one bot in config.exs. Example:
 
-            config :pyq_ratta,
-              tg_bots: [
-                %{
-                  module_name: PyqRatta.Telegram.Quizbot,
-                  token: System.get_env("QUIZ_BOT_TOKEN"),
-                  name: "@rem123_me_bot"
-                }
-              ]
-            ```
-            """
-        end
+          ```elixir
 
-      [ExGram | bots_list]
-    end
+          config :pyq_ratta,
+            tg_bots: [
+              %{
+                module_name: PyqRatta.Telegram.Quizbot,
+                token: System.get_env("QUIZ_BOT_TOKEN"),
+                name: "@rem123_me_bot"
+              }
+            ]
+          ```
+          """
+      end
+
+    [ExGram | bots_list]
+  end
+
+  # end
+
+  def setup_metrics(:test), do: nil
+
+  def setup_metrics(_) do
+    # Logger.add_translator({Medea.Translator, :translate})
+    OpentelemetryPhoenix.setup()
+    OpentelemetryLiveView.setup()
+    OpentelemetryEcto.setup([:pyq_ratta, :repo])
+    OpentelemetryLoggerMetadata.setup()
   end
 
   # Tell Phoenix to update the endpoint configuration

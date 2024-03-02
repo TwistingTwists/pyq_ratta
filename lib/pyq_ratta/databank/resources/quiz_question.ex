@@ -7,6 +7,11 @@ defmodule PyqRatta.Databank.QuizQuestion do
   alias PyqRatta.Databank.Quiz
   alias PyqRatta.Databank.Question
 
+  attributes do
+    attribute :question_number, :integer
+    # , allow_nil: false
+  end
+
   code_interface do
     define_for PyqRatta.Databank
     define :relate, args: [:quiz_id, :question_id]

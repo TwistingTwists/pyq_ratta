@@ -1,5 +1,5 @@
 defmodule PyqRatta.Workers.UserAttemptServer do
-  use GenServer, restart: :transient
+  use GenServer, restart: :transient,  shutdown: 7_000
 
   use TypedStruct
 
@@ -80,10 +80,11 @@ defmodule PyqRatta.Workers.UserAttemptServer do
     task =
       Task.Supervisor.async_nolink(PyqRatta.Telegram.TaskSupervisor, fn ->
         QuizChecker.handle_cast(
-          {:check_and_reply, state.previous_question, state.quiz, user_response,
-           state.user_tg_id},
+          {:check_and_reply, state.previous_question, state.quiz, user_response, state.user_tg_id},
           %{}
         )
+        # return :ok
+        :ok
       end)
 
     state = %{state | ref: task.ref}
@@ -119,7 +120,6 @@ defmodule PyqRatta.Workers.UserAttemptServer do
         {:stop, :normal, new_state}
         |> green("Shutting down the genserver")
 
-
       {question, new_state} ->
         # schedule_next_question()
         # send the question to whosoever asked.
@@ -140,13 +140,24 @@ defmodule PyqRatta.Workers.UserAttemptServer do
     {:noreply, %{state | ref: nil}}
   end
 
-  def terminate({:shutdown, :quiz_finished}, state) do
+  def handle_info(event, state) do
+    # Log and possibly restart the task...
+
+    Logger.error("#{__ENV__.file}:#{__ENV__.line} Unhandled handle_info: #{inspect(event)}")
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def terminate(:normal, state) do
+    yellow("#{__ENV__.file}:#{__ENV__.line}")
     {msg, opts} = MF.quiz_finished()
     ExGram.send_message(state.user_tg_id, msg, opts)
     :ok
   end
 
   def terminate(_any, state) do
+    yellow("#{__ENV__.file}:#{__ENV__.line}")
     {msg, opts} = MF.quiz_crashed()
     ExGram.send_message(state.user_tg_id, msg, opts)
     :ok

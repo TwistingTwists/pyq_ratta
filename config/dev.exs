@@ -110,5 +110,12 @@ config :phoenix, :plug_init_mode, :runtime
 # Include HEEx debug annotations as HTML comments in rendered markup
 config :phoenix_live_view, :debug_heex_annotations, true
 
+config :opentelemetry, :processors,
+  otel_batch_processor: %{
+    exporter: {:otel_exporter_stdout, []}
+    # exporter: {:opentelemetry_exporter, %{endpoints: [{:http, 'localhost', 55681, []}]}}
+    #
+  }
+
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false

@@ -59,6 +59,7 @@ defmodule PyqRatta.Telegram.Commands do
               pid
 
             {:error, {:already_started, pid}} ->
+              Logger.warn(" UserAttemptServer already running for user: #{user_id}")
               pid
 
             unknown ->
@@ -105,7 +106,7 @@ defmodule PyqRatta.Telegram.Commands do
 
     import Helpers.ColorIO
 
-    params = struct(ExGram.Model.ReplyParameters, message_id: msg_id())
+    params = struct!(ExGram.Model.ReplyParameters, message_id: msg_id())
 
     opts =
       opts
@@ -115,7 +116,7 @@ defmodule PyqRatta.Telegram.Commands do
       |> yellow("opts")
 
     ExGram.send_message(channel_id(), msg, opts)
-    |> purple("send message")
+    # |> purple("send message")
   end
 
   def channel_id do
