@@ -5,6 +5,31 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v1.1.0](https://github.com/TwistingTwists/pyq_ratta/compare/v1.0.0...v1.1.0) (2024-03-02)
+
+
+
+
+### Features:
+
+* questions are being sent in order now
+
+* question numbers are in join table!
+
+* buffered sender to send messages to telegram via a GenServer
+
+* improvements in UserAttemptServer
+
+* LoggerFileBackend now lgos in ./log/info.log and ./log/debug.log
+
+* observability: setup openobserve, loggerfilebackend, json exporter
+
+* test: add deps
+
+### Bug Fixes:
+
+* start quiz message format to comply with markdown
+
 ## [v1.0.0](https://github.com/TwistingTwists/pyq_ratta/compare/v0.2.0...v1.0.0) (2024-02-22)
 ### Breaking Changes:
 

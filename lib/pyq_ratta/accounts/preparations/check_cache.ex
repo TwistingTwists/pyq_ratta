@@ -45,6 +45,10 @@ defmodule PyqRatta.Accounts.Preparations.CheckCache do
     {:ok, user}
   end
 
+  defp cache_now(val) do
+    val
+  end
+
   defp cache_key(user_tg_id) do
     "#{user_tg_id}_user"
   end
