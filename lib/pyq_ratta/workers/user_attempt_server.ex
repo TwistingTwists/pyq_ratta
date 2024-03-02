@@ -60,9 +60,12 @@ defmodule PyqRatta.Workers.UserAttemptServer do
 
   @impl GenServer
   def handle_continue(:start, %{user_tg_id: uid, quiz_id: qid} = state) do
-    {:ok, quiz} = Quiz.read_by_id(qid)
     {:ok, user} = Accounts.User.by_tgid(uid)
-    state = %{state | questions: quiz.questions, quiz: quiz, user: user}
+
+    {:ok, quiz} = Quiz.read_by_id(qid)    
+    sorted_questions = Quiz.sort_question_order(quiz)
+    
+    state = %{state | questions: sorted_questions, quiz: quiz, user: user}
 
     {question, new_state} = do_send_next_question(state)
 

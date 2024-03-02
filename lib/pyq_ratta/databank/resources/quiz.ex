@@ -61,9 +61,7 @@ defmodule PyqRatta.Databank.Quiz do
 
       filter expr(id == ^arg(:quiz_id))
 
-      prepare fn query, _context ->
-        Ash.Query.load(query, [:questions])
-      end
+      prepare build(load: [:questions])
     end
 
     create :create_quiz_from_questions do
@@ -93,5 +91,17 @@ defmodule PyqRatta.Databank.Quiz do
 
       change manage_relationship(:question_ids, :questions, type: :append)
     end
+  end
+
+  def sort_question_order(quiz) do 
+    qid  = quiz.id
+    {:ok, qq_join_table} =  QuizQuestion.read_by_quiz_id(%{quiz_id: qid})
+
+  question_ids  = Enum.map(qq_join_table, & &1.question_id)
+
+  Enum.reduce(question_ids, [], fn qid, acc -> 
+      question = Enum.find(quiz.questions, fn q -> q.id == qid end)
+      [question | acc]
+end)
   end
 end

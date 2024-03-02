@@ -68,6 +68,7 @@ def take_screenshots_of_children(url, parent_selector="ol.wpProQuiz_list", child
             question = {}
             # question = defaultdict()
             question["source"] = url
+            question["question_number"] = n + 1
             question["short_description"] = page_title
 
             scr_path = f"{output_folder}/{page_title}/quiz_{n + 1:03d}.png"

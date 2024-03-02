@@ -18,6 +18,7 @@ defmodule PyqRatta.Databank.QuizQuestion do
     # define :create_with_qnum, args: [:quiz_id, :question_id, :question_number]
     define :update, action: :update_qnum
     define :read
+    define  :read_by_quiz_id
   end
 
   actions do
@@ -26,6 +27,13 @@ defmodule PyqRatta.Databank.QuizQuestion do
     create :relate do
       upsert? true
     end
+
+    read :read_by_quiz_id do 
+      argument :quiz_id, :uuid, allow_nil?: false
+      
+      filter(expr(quiz_id == ^arg( :quiz_id)))
+      prepare build(sort: [question_number: :desc])
+    end 
 
     # create :create_with_qnum do  
     #   argument :question_id , :uuid 
