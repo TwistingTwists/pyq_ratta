@@ -123,7 +123,7 @@ defmodule PyqRatta.Telegram.Commands do
 
   def channel_id do
     # todo save
-    -1_002_007_415_732
+    System.get_env("TELEGRAM_CHANNEL_ID") |> String.to_integer()
   end
 
   def msg_id, do: 48

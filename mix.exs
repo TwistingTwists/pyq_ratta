@@ -103,8 +103,8 @@ defmodule PyqRatta.MixProject do
 
       # Observability and logging
       {:logger_file_backend, "~> 0.0.13"},
-      # {:medea, "~> 0.1"},
-      {:medea, path: "./shared/medea"},
+      {:medea, "~> 0.1"},
+      # {:medea, path: "./shared/medea"},
 
       # opentelemetry
       # {:opentelemetry_telemetry, "~> 1.1"},
