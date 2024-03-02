@@ -61,7 +61,7 @@ defmodule PyqRatta.Telegram.Quizbot do
         context
       ) do
     NewPost.process_link(url)
-    |> NewPost.maybe_send_reply(channel_id)
+    |> NewPost.maybe_send_reply(admin_channel_id())
   end
 
   ######## any other command ########
@@ -113,6 +113,8 @@ defmodule PyqRatta.Telegram.Quizbot do
 
     answer(context, msg, opts)
   end
+
+  def admin_channel_id, do: -1_001_721_718_366
 
   # # error handling via custom error module
   # https://michal.muskala.eu/post/error-handling-in-elixir-libraries/

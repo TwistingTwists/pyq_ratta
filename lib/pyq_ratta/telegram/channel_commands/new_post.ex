@@ -2,6 +2,7 @@ defmodule PyqRatta.Telegram.ChannelCommands.NewPost do
   import Helpers.ColorIO
   alias PyqRatta.Telegram.MessageFormatter, as: MF
   alias PyqRatta.Telegram.Quizbot
+  require Logger
 
   def process_link(nil) do
     # ignore
@@ -25,7 +26,8 @@ defmodule PyqRatta.Telegram.ChannelCommands.NewPost do
   end
 
   def do_process(url) do
-    if String.contains?(url, "ppqs") do
+    if String.contains?(url, "ppqs-") do
+      Logger.info("processing url for taking screenshots: #{url}")
       url |> green("processing: #{__MODULE__}")
       PyqRatta.SystemCmd.parse_url(url)
       # |> create quiz
