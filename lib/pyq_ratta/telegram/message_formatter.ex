@@ -29,7 +29,8 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     msg = """
     Welcome to the Bot \\.
 
-    Made with Love by Team BusTicketTheory \\(BTT\\) \\.
+
+    #{affiliate()}
 
     """
 
@@ -40,9 +41,12 @@ defmodule PyqRatta.Telegram.MessageFormatter do
 
   def quiz_started(opts) do
     msg = """
-    Quiz has started for user -  #{opts[:user]}
+    🎉︎ Quiz has started for user -  #{opts[:user]}
     quiz  - #{opts[:quiz]}
-    next-question - 2s
+
+    next-question will be presented in 2s
+
+    #{affiliate()}
     """
 
     {msg, @default_opts}
@@ -82,7 +86,9 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     msg = """
     🎉︎ Quiz Finished. Enjoy!
 
-    #{link}
+    Answers are here => #{link}
+
+    #{affiliate()}
     """
 
     {msg, @default_opts}
@@ -94,6 +100,14 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     """
 
     {msg, @default_opts}
+  end
+
+  def affiliate() do
+    """
+    ---
+    Brought to you by SamikshaTech 🤗
+    ---
+    """
   end
 
   # defp markdown_v2_compatible(msg) do

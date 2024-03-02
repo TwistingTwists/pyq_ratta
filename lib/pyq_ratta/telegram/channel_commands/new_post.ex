@@ -35,7 +35,7 @@ defmodule PyqRatta.Telegram.ChannelCommands.NewPost do
   end
 
   def maybe_send_reply(:processed, chat_id) do
-    {msg, opts} = {"now processing the files", [bot: Quizbot.bot()]}
+    {msg, opts} = {"Quiz will be ready in 5 min.", [bot: Quizbot.bot()]}
     opts = Keyword.put_new(opts, :bot, Quizbot.bot())
     ExGram.send_message(chat_id, msg, opts)
   end
