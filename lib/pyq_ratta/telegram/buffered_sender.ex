@@ -86,7 +86,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
   end
 
   def send_now(%{buffer: [first_msg | tail]} = state) do
-    first_msg|> orange("first-msg")
+    # first_msg|> orange("first-msg")
     
 
     ExGram.send_message(first_msg.chat_id,first_msg.msg, first_msg.opts)

@@ -42,10 +42,9 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     msg = """
     Quiz has started for user -  #{opts[:user]}
     quiz  - #{opts[:quiz]}
-    
-    next_question: 2s
+    next-question - 2s
     """
-
+    
     {msg, @default_opts}
   end
 

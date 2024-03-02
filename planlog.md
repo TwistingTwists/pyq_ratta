@@ -1,12 +1,66 @@
 ### feedback for v1.0.0
 
 1. after question done -> { review? -> yes / no } + {link to source in select correct choice + 4 / 11 = for question count}
-2. quiz start -> number of questions in quiz + this is random order of questions.
-3. after quiz end -> link to pmfias
+2. quiz start -> number of questions in quiz + Brought to you by ()
+3. after quiz end -> Brought to you by ()
+
+use Ash.Reactor?
+https://github.com/ash-project/ash/pull/683/files#diff-a80a3b8c6d3b9d582afa791b2e44f12141439879039006919dcce58b545b8457
+
+
+[ ] telemetry basic setup
+    [ ] Jason.Encode for Ash Resources - Medea.Formatter
+    [ ] trace / span / and grafana cloud! 
+
+[ ] Bugs 
+    [x] Shutdown genserver properly 
+      [x]  - parting message?
+
+[ ] Buffered sender 
+    [x] basic implementation 
+    [ ] write to disk if BufferedSender Crashes and recover from disk? 
+
+[ ] QuizRunner 
+    [ ] What if server crashes when the user is taking the quiz? 
+    [ ] sending file from disk
+        [ ] send once and capture file_id in database column? -> then use that subsequently => not more uploading files again and again to telegram
+    
+
+[ ] solution screenshot?
+[ ] Question Order please
+
+
+https://dev.to/christianalexander/async-elixir-telemetry-2llo
+https://davelucia.com/blog/observing-elixir-with-lightstep
+https://hexdocs.pm/sibyl/Sibyl.html
+
+#### Running Quiz
+
+[ ] What if server closes down during quiz?
+    -> if a response comes for a user who hasn't started a quiz => ask to restart quiz by clicking on link again.
+
+[ ] cache users crashes?
+
 
 #### Logging Observability
 
-[x] LoggerFileBackend 
+[x] LoggerFileBackend
+    [ ] ingest to openobserve via HTTP
+
+[ ] getting started with open telemetry
+   [x] installation
+   [ ] OTEL for -> phoenix and ecto only.
+   [ ] Custom OTEL
+    [ ] Elixir Tempo Grafana Loki backend
+
+[ ] PromEx ?
+
+[ ] Postgres Setup
+    [ ] with backups to s3
+    https://elephant-shed.io/#download
+
+[ ]
+
 
 
 ### scrape

@@ -12,6 +12,7 @@ defmodule PyqRatta.Telegram.Commands do
   alias PyqRatta.Telegram.Quizbot
   alias PyqRatta.Telegram.SendHelpers
   alias PyqRatta.Telegram.MessageFormatter, as: MF
+  alias PyqRatta.Telegram.BufferedSender, as: TgSender
 
   require MyInspect
   require Logger
@@ -72,6 +73,7 @@ defmodule PyqRatta.Telegram.Commands do
     # ref = Process.monitor(pid)
 
     MF.quiz_started(user: user_id, quiz: quiz_id)
+    # TgSender.queue(user_id, msg, opts)
   end
 
   def via(user_id) do
