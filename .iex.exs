@@ -116,4 +116,48 @@ Response.of_user_tgid(me_tg_id)
 # opts = [user_id: " as", quiz_id: "asdf", a: "asdfff"]
 # struct(H.State, Map.new(opts))
 
-Logger.configure(level: :warning)
+# Logger.configure(level: :warning)
+
+
+alias PyqRatta.Telegram.BufferedSender, as: TgSender
+# TgSender.queue(6285379293, " Quiz Finished. Enjoy!\n", [parse_mode: "Markdown"])
+
+
+alias PyqRatta.Databank.QuizQuestion, as: QQ 
+# quiz_id = "dcb79a1c-878e-4a27-a911-64dd75a74add"
+# question_id = ""
+# quiz_question = QQ.read(qq_id)
+# QQ.update(quiz_question, 4)
+
+
+# QQ.create(%{quiz_id: "dcb79a1c-878e-4a27-a911-64dd75a74aed" , question_id: "dcb79a1c-878e-4a27-a911-64dd75a74aqq" , question_number: 1})
+
+
+
+# Quiz.create_quiz_from_questions([ 
+#     %{
+#         "source" => "https://www.pmfias.com/ppqs-january-05-2024/",
+#         "question_number" => 1,
+#         "short_description" => "January 05 2024 Prelims Practice Questions (PPQs)",
+#         "question_image" => "/Users/abhishek/Downloads/perps/prelims_portal/pyq_ratta/_build/dev/lib/pyq_ratta/priv/python/screenshots/January 05 2024 Prelims Practice Questions (PPQs)/quiz_001.png",
+#         "long_description" => "Q1. {Geo \u2013 EG \u2013 Mineral Resources} Consider the following statements about Graphene:\n\nGraphene is completely impermeable to all gases and liquids.\nGraphene is the first two-dimensional material that human beings ever created.\nGraphene-Based Nanomaterials are used in Electronic Skin Biosensing.\nIt is almost fully transparent.\nHow many of the above statement(s) is/are correct?\n  a) Only one\n  b) Only two\n  c) Only three\n  d) All\n",
+#         "correct_answer_text" => "3"
+#     },
+#     %{
+#         "source" => "https://www.pmfias.com/ppqs-january-05-2024/",
+#         "question_number" => 2,
+#         "short_description" => "January 05 2024 Prelims Practice Questions (PPQs)",
+#         "question_image" => "/Users/abhishek/Downloads/perps/prelims_portal/pyq_ratta/_build/dev/lib/pyq_ratta/priv/python/screenshots/January 05 2024 Prelims Practice Questions (PPQs)/quiz_002.png",
+#         "long_description" => "Q2. {Ministries \u2013 Initiatives} Consider the following statements about ERNET India:\n\nIt is a not-for-profit scientific society operating under Ministry of Education.\nIt serves as the exclusive domain registrar for educational and research institutions.\nWhich of the above statement(s) is/are correct?\n  a) 1 Only\n  b) 2 Only\n  c) Both 1 and 2\n  d) Neither 1 nor 2\n",
+#         "correct_answer_text" => "1"
+#     },
+#     %{
+#         "source" => "https://www.pmfias.com/ppqs-january-05-2024/",
+#         "question_number" => 3,
+#         "short_description" => "January 05 2024 Prelims Practice Questions (PPQs)",
+#         "question_image" => "/Users/abhishek/Downloads/perps/prelims_portal/pyq_ratta/_build/dev/lib/pyq_ratta/priv/python/screenshots/January 05 2024 Prelims Practice Questions (PPQs)/quiz_003.png",
+#         "long_description" => "Q3. {Ministry \u2013 Initiatives} Consider the following statements about PRERNA scheme:\n\nUnder the scheme, Accredited Social Health Activists hold monthly meetings with the adolescent girls in their area to talk about health issues including menstrual hygiene management.\nIt is an Initiative by Ministry of Women and Child Development.\nHow many of the above statement(s) is/are correct?\n  a) 1 Only\n  b) 2 Only\n  c) Both 1 and 2\n  d) Neither 1 nor 2\n",
+#         "correct_answer_text" => "3"
+#     }
+
+# ])

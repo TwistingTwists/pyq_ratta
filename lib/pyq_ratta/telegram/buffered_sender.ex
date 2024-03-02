@@ -62,7 +62,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
     new_buffer = state.buffer ++ [msg]
 
     if length(new_buffer) >= 10 do
-      Logger.warn("TOO MANY messages in buffer.")
+      Logger.warning("TOO MANY messages in buffer.")
     end
 
     new_state = %{state | buffer: new_buffer}

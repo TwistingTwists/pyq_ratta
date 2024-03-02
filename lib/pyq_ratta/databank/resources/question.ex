@@ -50,8 +50,11 @@ defmodule PyqRatta.Databank.Question do
   end
 
   actions do
-    defaults([:read, :update, :create, :destroy])
+    defaults([:read, :update, :destroy])
 
+    create :create do  
+      upsert? true 
+    end
     read(:all)
 
     read :read_by_id do

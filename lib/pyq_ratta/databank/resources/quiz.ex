@@ -8,6 +8,7 @@ defmodule PyqRatta.Databank.Quiz do
   alias PyqRatta.Databank.Question
   alias PyqRatta.Databank.QuizQuestion
 
+
   attributes do
     uuid_primary_key :id
 
@@ -73,7 +74,14 @@ defmodule PyqRatta.Databank.Quiz do
       end
 
       # change {PyqRatta.Databank.Changes.AddArgToRelationship, arg: :quiz_id, rel: :questions}
-      change manage_relationship(:questions, type: :direct_control)
+      # change manage_relationship(:questions, type: :direct_control)
+      change manage_relationship(:questions, [
+        on_lookup: :ignore,
+        on_no_match: { :create, :create, :relate ,[:quiz_id, :question_id, :question_number] } ,
+        on_match: :update,
+        on_missing: :destroy
+      ]  )
+
     end
 
     update :update_quiz_with_question_ids do

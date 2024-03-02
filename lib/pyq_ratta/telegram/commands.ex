@@ -60,7 +60,7 @@ defmodule PyqRatta.Telegram.Commands do
               pid
 
             {:error, {:already_started, pid}} ->
-              Logger.warn(" UserAttemptServer already running for user: #{user_id}")
+              Logger.warning(" UserAttemptServer already running for user: #{user_id}")
               pid
 
             unknown ->

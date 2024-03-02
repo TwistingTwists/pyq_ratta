@@ -14,13 +14,31 @@ defmodule PyqRatta.Databank.QuizQuestion do
 
   code_interface do
     define_for PyqRatta.Databank
-    define :relate, args: [:quiz_id, :question_id]
+    define :relate, args: [:quiz_id, :question_id, :question_number]
+    # define :create_with_qnum, args: [:quiz_id, :question_id, :question_number]
+    define :update, action: :update_qnum
+    define :read
   end
 
   actions do
+    defaults [:create, :read, :update, :destroy]
+
     create :relate do
       upsert? true
     end
+
+    # create :create_with_qnum do  
+    #   argument :question_id , :uuid 
+    #   argument :quiz_id , :uuid 
+    #   argument :question_number, :integer
+
+    # end
+
+    update :update_qnum do 
+      accept [:question_number]
+      # upsert? true
+    end
+
   end
 
   postgres do
@@ -31,10 +49,6 @@ defmodule PyqRatta.Databank.QuizQuestion do
       reference :quiz, on_delete: :delete
       reference :question, on_delete: :delete
     end
-  end
-
-  actions do
-    defaults [:create, :read, :update, :destroy]
   end
 
   relationships do
