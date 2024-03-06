@@ -2,16 +2,28 @@
 # PyqRatta
 
 ### Runtime Analysis
+alias PyqRatta.Telegram.BufferedSender, as: TgSender
+alias PyqRatta.Telegram.Quizbot
+
 DynamicSupervisor.count_children(PyqRatta.Telegram.Commands.DynamicSupervisor)
 
 user_pids = DynamicSupervisor.which_children(PyqRatta.Telegram.Commands.DynamicSupervisor) |> Enum.map(fn {:undefined, pid, _, _} -> pid end )
 
 user_pid = hd(user_pids )
 
-{_, _, _, state} = :sys.get_status(user_pid)
+Enum.map(user_pids, fn user_pid ->  
+
+  {_, _, _, [_,_,_,_,genserver_state]} = :sys.get_status(user_pid)
 
 
-Keyword.pop(genserver_state, :data)
+  [_first,[{_, internal_state}]] = Keyword.get_values(genserver_state, :data)
+
+  TgSender.queue(internal_state.user_tg_id, msg, opts)
+
+  {internal_state.user.telegram_id,
+  internal_state.previous_question.question_image}
+
+end) 
 
 
 
