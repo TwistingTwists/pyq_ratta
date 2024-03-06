@@ -29,6 +29,7 @@ defmodule PyqRatta.Application do
         # Start the unique task dependencies
         Livebook.Utils.UniqueTask
       ] ++
+        monitoring_children() ++
         add_bots(env)
 
     opts = [strategy: :one_for_one, name: PyqRatta.Supervisor]
@@ -76,6 +77,10 @@ defmodule PyqRatta.Application do
   end
 
   # end
+
+  def monitoring_children do
+    [Monitoring.PostgresBackup, MonitoringTools.MemoryWatcher]
+  end
 
   def setup_metrics(:test), do: nil
 

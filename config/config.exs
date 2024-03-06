@@ -16,10 +16,14 @@ config :pyq_ratta,
     }
   ]
 
-config :pyq_ratta,
+config :pyq_ratta, MonitoringTools.MemoryWatcher, enabled: true
+config :pyq_ratta, MonitoringTools.ReductionWatcher, enabled: true
+
+config(:pyq_ratta,
   ash_apis: [PyqRatta.Databank, PyqRatta.Accounts, PyqRatta.QuizPractice],
   ecto_repos: [PyqRatta.Repo],
   generators: [timestamp_type: :utc_datetime]
+)
 
 config :ash,
   use_all_identities_in_manage_relationship?: false
