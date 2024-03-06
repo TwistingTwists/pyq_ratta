@@ -38,7 +38,9 @@ defmodule PyqRatta.Telegram.Commands do
     Supervisor.init(children, strategy: :one_for_all)
   end
 
-  ###### interface with ExGram low level API ######
+  # +-------------------------------------+
+  # | interface with ExGram low level API |
+  # +-------------------------------------+
 
   @doc """
   key for finding the UserAttemptServer: user_id
@@ -70,8 +72,7 @@ defmodule PyqRatta.Telegram.Commands do
           end
       end
 
-    # ref = Process.monitor(pid)
-
+    #  ref = Process.monitor(pid)  
     MF.quiz_started(user: user_id, quiz: quiz_id)
     # TgSender.queue(user_id, msg, opts)
   end
@@ -80,7 +81,9 @@ defmodule PyqRatta.Telegram.Commands do
     {:via, Registry, {@registry, user_id}}
   end
 
-  ###### interface with user / db ######
+  # +--------------------------+
+  # | interface with user / db |
+  # +--------------------------+
 
   def send_to_tg(user_id, question) do
     do_send_question(user_id, question)
@@ -127,4 +130,12 @@ defmodule PyqRatta.Telegram.Commands do
   end
 
   def msg_id, do: 48
+
+  # +--------------------+
+  # | Monitoring Helpers |
+  # +--------------------+
+
+  def count_children do
+    DynamicSupervisor.count_children(@dynamic_supervisor)
+  end
 end

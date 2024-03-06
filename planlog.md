@@ -3,8 +3,6 @@
 use Ash.Reactor?
 https://github.com/ash-project/ash/pull/683/files#diff-a80a3b8c6d3b9d582afa791b2e44f12141439879039006919dcce58b545b8457
 
-1. unit test -> 
-
 
 ### context to send to chatgpt 
 ```
@@ -36,7 +34,9 @@ Write an SQL query to list the number of students who have taken latest quiz
 1. Prompt at most active and least active times? 
     * Activity in group, join/leave time, post time
 2. Most active (quiz) - updates to #n people completed! 
-3. 
+3. Live Dashboard - on website? 
+    #users who attempted question 1 - Realtime
+4. 
 
 
 ### Analytics / Reminders

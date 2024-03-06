@@ -7,6 +7,7 @@ defmodule PyqRatta.Databank.Question do
 
     attribute(:question_text, :string, allow_nil?: true)
     attribute(:question_image, :string, allow_nil?: true)
+    attribute(:question_image_tg, :string, allow_nil?: true)
 
     attribute(:type, :string)
 
