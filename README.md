@@ -1,4 +1,19 @@
+ DailyQuizForYouBot
 # PyqRatta
+
+### Runtime Analysis
+DynamicSupervisor.count_children(PyqRatta.Telegram.Commands.DynamicSupervisor)
+
+user_pids = DynamicSupervisor.which_children(PyqRatta.Telegram.Commands.DynamicSupervisor) |> Enum.map(fn {:undefined, pid, _, _} -> pid end )
+
+user_pid = hd(user_pids )
+
+{_, _, _, state} = :sys.get_status(user_pid)
+
+
+Keyword.pop(genserver_state, :data)
+
+
 
 ## Notes from AshHq
 
