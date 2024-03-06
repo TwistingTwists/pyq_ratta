@@ -62,6 +62,17 @@ defmodule PyqRatta.Telegram.MessageFormatter do
     {msg, @default_opts}
   end
 
+  def reminder_if_idle(opts) do
+    msg = """
+    🤔 Did you get distracted while taking the quiz? Don't worry. 🚀
+    You can resume it now. 👍
+
+    Just attempt the question above. 👆👆
+    """
+
+    {msg, @default_opts}
+  end
+
   def echo_message(msg) do
     {msg, []}
   end
