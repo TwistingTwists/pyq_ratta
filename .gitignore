@@ -56,3 +56,4 @@ data_openobserve/
 priv/python/data.json
 data.json
 ecto_erd.dot
+*.db
