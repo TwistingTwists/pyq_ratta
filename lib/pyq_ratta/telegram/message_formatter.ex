@@ -22,6 +22,10 @@ defmodule PyqRatta.Telegram.MessageFormatter do
       end
 
     opts = @default_opts ++ [reply_markup: keyboard]
+    # TODO PURGE later
+    # if opts[:current_question_number],
+    #   do: {"Question #{opts[:current_question_number]}", opts},
+    #   else:
     {"Select Correct Choice", opts}
   end
 
@@ -41,11 +45,9 @@ defmodule PyqRatta.Telegram.MessageFormatter do
 
   def quiz_started(opts) do
     msg = """
-    🎉︎ Quiz has started for user -  #{opts[:user]}
-    quiz  - #{opts[:quiz]}
+    🎉︎ Quiz has Questions: **#{Map.get(opts[:quiz] || %{}, :question_count, "")}**
 
     next-question will be presented in 2s
-
     #{affiliate()}
     """
 

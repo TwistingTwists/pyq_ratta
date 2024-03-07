@@ -9,10 +9,12 @@ defmodule PyqRatta.Telegram.Commands do
 
   use Supervisor
 
+  alias PyqRatta.Databank.Quiz
+  alias PyqRatta.Telegram.BufferedSender, as: TgSender
+  alias PyqRatta.Telegram.MessageFormatter, as: MF
+  alias PyqRatta.Telegram.Quizbot
   alias PyqRatta.Telegram.Quizbot
   alias PyqRatta.Telegram.SendHelpers
-  alias PyqRatta.Telegram.MessageFormatter, as: MF
-  alias PyqRatta.Telegram.BufferedSender, as: TgSender
 
   require MyInspect
   require Logger
@@ -72,8 +74,9 @@ defmodule PyqRatta.Telegram.Commands do
           end
       end
 
+    quiz = Quiz.read_by_id!(quiz_id)
     #  ref = Process.monitor(pid)  
-    MF.quiz_started(user: user_id, quiz: quiz_id)
+    MF.quiz_started(user: user_id, quiz: quiz)
     # TgSender.queue(user_id, msg, opts)
   end
 
@@ -120,7 +123,9 @@ defmodule PyqRatta.Telegram.Commands do
       |> Keyword.put_new(:reply_parameters, params)
       |> yellow("opts")
 
-    ExGram.send_message(channel_id(), msg, opts)
+    # ExGram.send_message(channel_id(), msg, opts)
+    TgSender.queue(channel_id(), msg, opts)
+
     # |> purple("send message")
   end
 
