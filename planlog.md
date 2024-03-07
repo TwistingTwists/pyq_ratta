@@ -4,6 +4,21 @@ use Ash.Reactor?
 https://github.com/ash-project/ash/pull/683/files#diff-a80a3b8c6d3b9d582afa791b2e44f12141439879039006919dcce58b545b8457
 
 
+### See PRs and start elixir course.
+
+[ ] Cohort based course?
+    [ ] https://github.com/sofialapteva/homework1/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc
+
+[ ] Task-004 FSM implementation
+    [ ] https://github.com/dmkl-elixir-course/task4-tram-fsm/pull/1
+
+
+## libraries to consider 
+
+-- send events to clickhouse, redis etc -> https://github.com/am-kantox/rambla/blob/master/lib/rambla/exception.ex
+-- 
+
+
 ### context to send to chatgpt 
 ```
 main	quiz_questions	table	3	0	0
@@ -84,6 +99,7 @@ https://hexdocs.pm/sibyl/Sibyl.html
     https://elephant-shed.io/#download
 
 [ ] telemetry basic setup
+    [ ] https://github.com/am-kantox/telemetria
         [ ] Jason.Encode for Ash Resources - Medea.Formatter
         [ ] trace / span / and grafana cloud! 
 

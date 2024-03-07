@@ -4,7 +4,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
   require Logger
 
   import Helpers.ColorIO
-  alias  PyqRatta.Telegram.Quizbot 
+  alias PyqRatta.Telegram.Quizbot
   @send_interval 100
 
   typedstruct enforce: true, visibility: :opaque, module: Message do
@@ -34,7 +34,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
 
     msg_opts = %{chat_id: chat_id, msg: msg, opts: tg_opts}
 
-    msg = struct(__MODULE__.Message, msg_opts )
+    msg = struct(__MODULE__.Message, msg_opts)
 
     GenServer.cast(__MODULE__, {:queue, msg})
   end
@@ -52,8 +52,10 @@ defmodule PyqRatta.Telegram.BufferedSender do
   @impl GenServer
   def init(opts) do
     # Process.flag(:trap_exit, true)
-    state = struct(__MODULE__.Internal, Map.new(opts))
-    |> purple()
+    state =
+      struct(__MODULE__.Internal, Map.new(opts))
+      |> purple()
+
     schedule_send()
     {:ok, state}
   end
@@ -70,7 +72,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
   end
 
   def handle_info(:send_next, state) do
-    state.buffer |> green("handle_info")
+    # state.buffer |> green("handle_info")
     state = send_now(state)
     {:noreply, state}
   end
@@ -87,15 +89,13 @@ defmodule PyqRatta.Telegram.BufferedSender do
 
   def send_now(%{buffer: [first_msg | tail]} = state) do
     # first_msg|> orange("first-msg")
-    
 
-    ExGram.send_message(first_msg.chat_id,first_msg.msg, first_msg.opts)
+    ExGram.send_message(first_msg.chat_id, first_msg.msg, first_msg.opts)
     |> yellow("send_message")
+
     schedule_send()
     %{state | buffer: tail}
   end
 
   # bot utilities 
-
-  
 end
