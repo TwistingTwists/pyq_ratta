@@ -8,6 +8,7 @@ defmodule PyqRatta.Databank.Quiz do
   alias PyqRatta.Databank.Question
   alias PyqRatta.Databank.QuizQuestion
 
+  @load_fields [:questions, :question_count]
 
   attributes do
     uuid_primary_key :id
@@ -20,6 +21,10 @@ defmodule PyqRatta.Databank.Quiz do
 
     create_timestamp :created_at
     update_timestamp :updated_at
+  end
+
+  aggregates do
+    count :question_count, :questions
   end
 
   relationships do
@@ -61,7 +66,7 @@ defmodule PyqRatta.Databank.Quiz do
 
       filter expr(id == ^arg(:quiz_id))
 
-      prepare build(load: [:questions])
+      prepare build(load: @load_fields)
     end
 
     create :create_quiz_from_questions do
@@ -73,13 +78,12 @@ defmodule PyqRatta.Databank.Quiz do
 
       # change {PyqRatta.Databank.Changes.AddArgToRelationship, arg: :quiz_id, rel: :questions}
       # change manage_relationship(:questions, type: :direct_control)
-      change manage_relationship(:questions, [
-        on_lookup: :ignore,
-        on_no_match: { :create, :create, :relate ,[:quiz_id, :question_id, :question_number] } ,
-        on_match: :update,
-        on_missing: :destroy
-      ]  )
-
+      change manage_relationship(:questions,
+               on_lookup: :ignore,
+               on_no_match: {:create, :create, :relate, [:quiz_id, :question_id, :question_number]},
+               on_match: :update,
+               on_missing: :destroy
+             )
     end
 
     update :update_quiz_with_question_ids do
@@ -93,15 +97,15 @@ defmodule PyqRatta.Databank.Quiz do
     end
   end
 
-  def sort_question_order(quiz) do 
-    qid  = quiz.id
-    {:ok, qq_join_table} =  QuizQuestion.read_by_quiz_id(%{quiz_id: qid})
+  def sort_question_order(quiz) do
+    qid = quiz.id
+    {:ok, qq_join_table} = QuizQuestion.read_by_quiz_id(%{quiz_id: qid})
 
-  question_ids  = Enum.map(qq_join_table, & &1.question_id)
+    question_ids = Enum.map(qq_join_table, & &1.question_id)
 
-  Enum.reduce(question_ids, [], fn qid, acc -> 
+    Enum.reduce(question_ids, [], fn qid, acc ->
       question = Enum.find(quiz.questions, fn q -> q.id == qid end)
       [question | acc]
-end)
+    end)
   end
 end
