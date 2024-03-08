@@ -26,7 +26,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
 
   @doc "Start"
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__, hibernate_after: 5_000)
   end
 
   def queue(chat_id, msg, tg_opts) do
@@ -74,12 +74,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
   end
 
   def handle_info(:send_next, state) do
-    # state.buffer |> green("handle_info")
-    send_now(state)
-    |> case do
-      {:hibernate, state} -> {:noreply, state, :hibernate}
-      {:cont, state} -> {:noreply, state}
-    end
+    {:noreply, send_now(state)}
   end
 
   def schedule_send(timer \\ @send_interval) do
@@ -89,8 +84,8 @@ defmodule PyqRatta.Telegram.BufferedSender do
   def send_now(%{buffer: []} = state) do
     # add additional time to reduce too many messages from itself.
     # schedule_send(700)
-    Logger.info("Hibernating: #{__MODULE__} : #{inspect(self())}")
-    {:hibernate, state}
+    # Logger.info("Hibernating: #{__MODULE__} : #{inspect(self())}")
+    state
   end
 
   def send_now(%{buffer: [first_msg | tail]} = state) do
@@ -100,7 +95,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
     |> yellow("send_message")
 
     schedule_send()
-    {:cont, %{state | buffer: tail}}
+    %{state | buffer: tail}
   end
 
   # bot utilities 
