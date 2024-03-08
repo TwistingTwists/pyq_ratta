@@ -67,14 +67,19 @@ defmodule PyqRatta.Telegram.BufferedSender do
       Logger.warning("TOO MANY messages in buffer.")
     end
 
+    schedule_send(300)
+
     new_state = %{state | buffer: new_buffer}
     {:noreply, new_state}
   end
 
   def handle_info(:send_next, state) do
     # state.buffer |> green("handle_info")
-    state = send_now(state)
-    {:noreply, state}
+    send_now(state)
+    |> case do
+      {:hibernate, state} -> {:noreply, state, :hibernate}
+      {:cont, state} -> {:noreply, state}
+    end
   end
 
   def schedule_send(timer \\ @send_interval) do
@@ -83,8 +88,9 @@ defmodule PyqRatta.Telegram.BufferedSender do
 
   def send_now(%{buffer: []} = state) do
     # add additional time to reduce too many messages from itself.
-    schedule_send(700)
-    state
+    # schedule_send(700)
+    Logger.info("Hibernating: #{__MODULE__} : #{inspect(self())}")
+    {:hibernate, state}
   end
 
   def send_now(%{buffer: [first_msg | tail]} = state) do
@@ -94,7 +100,7 @@ defmodule PyqRatta.Telegram.BufferedSender do
     |> yellow("send_message")
 
     schedule_send()
-    %{state | buffer: tail}
+    {:cont, %{state | buffer: tail}}
   end
 
   # bot utilities 
