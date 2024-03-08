@@ -107,7 +107,8 @@ https://hexdocs.pm/sibyl/Sibyl.html
 
 ### QuizRunner 
 
-    [ ] Total Question Count before quiz
+    [ ] Hibernate the BufferendSender Genserver if there are no messaged in queue.
+    [x] Total Question Count before quiz
     [ ] (bug) If user starts a new quiz when old one is already running? 
     -> kill old one and start new one.
 
