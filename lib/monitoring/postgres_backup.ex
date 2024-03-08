@@ -1,9 +1,15 @@
 defmodule Monitoring.PostgresBackup do
   use GenServer
+  use TypedStruct
 
   require Logger
 
   @interval 1000 * 60 * 60 * 6
+
+  typedstruct visibility: :opaque, module: Internal do
+    @moduledoc "Internal state "
+    field :backups, List.t(), default: []
+  end
 
   # +--------------------+
   # |     Public API     |
@@ -32,7 +38,8 @@ defmodule Monitoring.PostgresBackup do
     # Similarly to our cron job GenSever from Chapter 4, we lean on
     # the `handle_continue/2` callback to schedule our next
     # cron job execution.
-    {:ok, nil, {:continue, :schedule_next_run}}
+    state = struct(__MODULE__.Internal, %{backups: []})
+    {:ok, state, {:continue, :schedule_next_run}}
   end
 
   @impl true
@@ -52,14 +59,30 @@ defmodule Monitoring.PostgresBackup do
   def handle_info(:backup, state) do
     # db-to-sqlite "postgresql://postgres:postgres@localhost/pyq_ratta_dev" $(date +"%Y-%m-%d_%H_%M_%S").db  --all -p
 
-    MuonTrap.cmd("db-to-sqlite", [db_string(), backup_filename(), "--all", "-p"])
-    |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+    state =
+      MuonTrap.cmd("db-to-sqlite", [db_string(), backup_filename(), "--all", "-p"])
+      |> Common.Result.wrap()
+      |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+      |> case do
+        {:ok, output} ->
+          Logger.info("db-to-sqlite success. Got: #{output}")
 
-    Logger.info("postgres backed up to sqlite file")
+          %{state | backups: [backup_filename() | state.backups]}
+
+        err ->
+          Logger.error("db-to-sqlite failed. Got: #{err}")
+          state
+      end
+
     {:noreply, state, {:continue, :schedule_next_run}}
   end
 
-  def db_string, do: "postgresql://postgres:postgres@localhost/pyq_ratta_dev"
+  def db_string,
+    do:
+      System.get_env(
+        "POSTGRES_BACKUP_DB_URL",
+        "postgresql://postgres:postgres@localhost/pyq_ratta_dev"
+      )
 
   def backup_filename do
     (DateTime.utc_now()
